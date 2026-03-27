@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     const relevantDocs = MOCK_DECISIONS
       .filter(doc => {
         const docText = [doc.title, doc.sommaire, ...doc.themes].join(" ").toLowerCase();
-        const terms = questionLower.split(/\s+/).filter(w => w.length > 4);
-        return terms.some(t => docText.includes(t));
+        const terms = questionLower.split(/\s+/).filter((w: string) => w.length > 4);
+        return terms.some((t: string) => docText.includes(t));
       })
       .slice(0, 5);
 

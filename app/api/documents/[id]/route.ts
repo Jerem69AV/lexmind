@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_DECISIONS } from "@/lib/mock-data";
+import { getDecision, getRelatedDecisions } from "@/lib/search";
 
 export async function GET(
   _request: NextRequest,
@@ -7,38 +7,32 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  await new Promise(r => setTimeout(r, 50 + Math.random() * 100));
+  try {
+    const document = await getDecision(decodeURIComponent(id));
 
-  const document = MOCK_DECISIONS.find(d => d.id === id);
+    if (!document) {
+      return NextResponse.json(
+        { error: "Décision introuvable", id },
+        { status: 404 }
+      );
+    }
 
-  if (!document) {
-    // Return a 404-style response but with mock data for unknown IDs
-    const fallback = MOCK_DECISIONS[0];
-    return NextResponse.json({
-      ...fallback,
-      id,
-      ecli: `ECLI:FR:CCASS:2024:XX${id.toUpperCase().substring(0, 5)}`,
-      title: `Décision n° ${id} — Document de référence`,
-    });
+    const similar = await getRelatedDecisions(document, 4);
+
+    return NextResponse.json(
+      { ...document, similar_decisions: similar },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=3600",
+          "X-Data-Source": document.source,
+        },
+      }
+    );
+  } catch (error) {
+    console.error(`[API /documents/${id}] Erreur:`, error);
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération de la décision." },
+      { status: 500 }
+    );
   }
-
-  // Include similar decisions
-  const similar = MOCK_DECISIONS
-    .filter(d => d.id !== id && d.themes.some(t => document.themes.includes(t)))
-    .slice(0, 3)
-    .map(d => ({
-      id: d.id,
-      ecli: d.ecli,
-      title: d.title,
-      juridiction: d.juridiction,
-      chambre: d.chambre,
-      date: d.date,
-      solution: d.solution,
-      sommaire: d.sommaire.substring(0, 180) + "...",
-    }));
-
-  return NextResponse.json({
-    ...document,
-    similar_decisions: similar,
-  });
 }

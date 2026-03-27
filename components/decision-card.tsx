@@ -55,9 +55,9 @@ export function DecisionCard({ decision, query = "", onBookmark, isBookmarked, c
             <BookOpen size={10} className="mr-1" />
             {decision.publication}
           </span>
-          {decision.score > 0 && (
+          {(decision.score ?? 0) > 0 && (
             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs bg-slate-700/50 text-slate-400 border border-slate-600">
-              Score: {Math.round(decision.score * 100)}%
+              Score: {Math.round((decision.score ?? 0) * 100)}%
             </span>
           )}
         </div>

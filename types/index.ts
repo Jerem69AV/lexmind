@@ -65,6 +65,8 @@ export interface Renvoi {
 
 // ─── Search Types ─────────────────────────────────────────────────────────────
 
+export type SearchSource = "judilibre" | "legifrance" | "mock" | "all";
+
 export interface SearchFilters {
   juridiction?: Juridiction | "";
   chambre?: string;
@@ -106,7 +108,7 @@ export interface LegalDocumentSummary {
   snippet: string;
   highlight?: SnippetHighlight[];
   themes: string[];
-  score: number;
+  score?: number;
 }
 
 export interface SnippetHighlight {
