@@ -39,7 +39,9 @@ export async function unifiedSearch(
 
   const useAll = sources.includes("all");
   const useJudilibre = useAll || sources.includes("judilibre");
-  const useLegifrance = useAll || sources.includes("legifrance");
+  // Légifrance désactivé par défaut — activer en mettant LEGIFRANCE_ENABLED=true dans .env.local
+  const legifranceEnabled = process.env.LEGIFRANCE_ENABLED === "true";
+  const useLegifrance = legifranceEnabled && (useAll || sources.includes("legifrance"));
 
   // ── Mode mock ──────────────────────────────────────────────────────────────
   if (mode === "mock") {

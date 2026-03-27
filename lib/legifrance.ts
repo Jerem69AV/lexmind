@@ -9,10 +9,11 @@
  * Licence Ouverte 2.0 — attribution obligatoire (source + date MAJ).
  */
 
-import { getPisteToken, invalidatePisteToken } from "./piste-auth";
+import { getPisteToken, invalidatePisteToken, PISTE_BASE_API } from "./piste-auth";
 import type { LegalDocument, LegalDocumentSummary, SearchFilters } from "@/types";
 
-const LEGIFRANCE_BASE = "https://api.piste.gouv.fr/dila/legifrance/lf-engine-app";
+// URL construite dynamiquement selon PISTE_ENV (sandbox ou production)
+const LEGIFRANCE_BASE = `${PISTE_BASE_API}/dila/legifrance/lf-engine-app`;
 
 // ─── Types internes Légifrance ────────────────────────────────────────────────
 

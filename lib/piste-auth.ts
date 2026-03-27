@@ -7,7 +7,20 @@
  * Les tokens expirent toutes les heures ; on les met en cache en mémoire.
  */
 
-const PISTE_TOKEN_URL = "https://oauth.piste.gouv.fr/api/oauth/token";
+// PISTE supporte deux environnements :
+//   SANDBOX    → https://sandbox-oauth.piste.gouv.fr  +  https://sandbox-api.piste.gouv.fr
+//   PRODUCTION → https://oauth.piste.gouv.fr          +  https://api.piste.gouv.fr
+//
+// Mettez PISTE_ENV=production dans .env.local pour passer en production.
+const isSandbox = (process.env.PISTE_ENV ?? "sandbox") !== "production";
+
+export const PISTE_BASE_API = isSandbox
+  ? "https://sandbox-api.piste.gouv.fr"
+  : "https://api.piste.gouv.fr";
+
+const PISTE_TOKEN_URL = isSandbox
+  ? "https://sandbox-oauth.piste.gouv.fr/api/oauth/token"
+  : "https://oauth.piste.gouv.fr/api/oauth/token";
 
 interface TokenCache {
   access_token: string;

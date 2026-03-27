@@ -9,10 +9,11 @@
  * et au décret n° 2020-797 du 29 juin 2020.
  */
 
-import { getPisteToken, invalidatePisteToken } from "./piste-auth";
+import { getPisteToken, invalidatePisteToken, PISTE_BASE_API } from "./piste-auth";
 import type { LegalDocument, LegalDocumentSummary, SearchFilters } from "@/types";
 
-const JUDILIBRE_BASE = "https://api.piste.gouv.fr/cassation/judilibre/v1.0";
+// URL construite dynamiquement selon PISTE_ENV (sandbox ou production)
+const JUDILIBRE_BASE = `${PISTE_BASE_API}/cassation/judilibre/v1.0`;
 
 // ─── Types internes Judilibre ────────────────────────────────────────────────
 
