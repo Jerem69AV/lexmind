@@ -20,6 +20,10 @@ function WidgetContent() {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
+  // URL de base pour les liens vers la décision complète
+  const appOrigin = process.env.NEXT_PUBLIC_APP_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "https://lexmind-tawny.vercel.app");
+
   const doSearch = useCallback(async (q: string, p: number) => {
     if (!q.trim()) return;
     setLoading(true);
@@ -173,7 +177,7 @@ function WidgetContent() {
               {results.map(doc => (
                 <a
                   key={doc.id}
-                  href={`/research/${doc.id}`}
+                  href={`${appOrigin}/research/${doc.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-lg p-3 border transition-colors hover:brightness-110"
