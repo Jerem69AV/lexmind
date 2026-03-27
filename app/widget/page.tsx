@@ -41,12 +41,12 @@ function WidgetContent() {
       const res = await fetch(`/api/search?${params.toString()}`, { headers });
       if (!res.ok) throw new Error(res.status === 401 ? "Clé API invalide" : "Erreur serveur");
       const data = await res.json();
-      // Si fallback mock actif, afficher 0 résultats avec message clair
+      // Si fallback mock actif (erreur API), afficher message d'erreur
       if (data.fallback) {
         setResults([]);
         setTotal(0);
         setTotalPages(0);
-        setError("L'API Judilibre est temporairement indisponible. Réessayez dans quelques instants.");
+        setError("Service temporairement indisponible. Réessayez dans quelques instants.");
         return;
       }
       setResults(data.documents ?? []);

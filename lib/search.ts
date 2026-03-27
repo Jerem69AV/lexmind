@@ -54,7 +54,7 @@ export async function unifiedSearch(
   }
 
   // ── Mode live ou hybrid ────────────────────────────────────────────────────
-  const promises: Promise<{ documents: LegalDocumentSummary[]; total: number; source: string }>[] = [];
+  const promises: Promise<{ documents: LegalDocumentSummary[]; total: number; source: string; error?: boolean }>[] = [];
 
   if (useJudilibre) {
     promises.push(
@@ -62,7 +62,7 @@ export async function unifiedSearch(
         .then(r => ({ documents: r.documents, total: r.total, source: "judilibre" }))
         .catch(err => {
           console.error("[Judilibre] Erreur recherche:", err.message);
-          return { documents: [], total: 0, source: "judilibre_error" };
+          return { documents: [], total: 0, source: "judilibre_error", error: true };
         })
     );
   }
@@ -73,12 +73,14 @@ export async function unifiedSearch(
         .then(r => ({ documents: r.documents, total: r.total, source: "legifrance" }))
         .catch(err => {
           console.error("[Légifrance] Erreur recherche:", err.message);
-          return { documents: [], total: 0, source: "legifrance_error" };
+          return { documents: [], total: 0, source: "legifrance_error", error: true };
         })
     );
   }
 
   const results = await Promise.all(promises);
+  // true seulement si TOUTES les sources ont retourné une erreur (pas juste 0 résultats)
+  const allSourcesFailed = results.length > 0 && results.every(r => r.error);
 
   const sourcesUsed: SearchSource[] = results
     .filter(r => r.documents.length > 0)
@@ -103,9 +105,9 @@ export async function unifiedSearch(
   const total = results.reduce((sum, r) => sum + r.total, 0);
   const paginated = merged.slice(0, perPage);
 
-  // Fallback mock si aucun résultat réel
-  if (paginated.length === 0 && mode === "hybrid") {
-    console.warn("[Search] Aucun résultat API — fallback mock");
+  // Fallback mock uniquement si les APIs ont retourné une erreur (pas si 0 résultats légitimes)
+  if (allSourcesFailed && mode === "hybrid") {
+    console.warn("[Search] Erreur API — fallback mock");
     const mockResult = searchDecisions(query, filters as Record<string, string>, page, perPage);
     return {
       ...mockResult,
