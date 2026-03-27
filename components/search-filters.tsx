@@ -12,6 +12,9 @@ interface SearchFiltersProps {
   resultCount?: number;
 }
 
+// Juridictions disponibles via Judilibre (sources actives)
+const JURIDICTIONS_DISPONIBLES = new Set(["Cour de cassation"]);
+
 const JURIDICTIONS = [
   "Cour de cassation",
   "Conseil d'État",
@@ -124,19 +127,26 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
             />
             <span className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">Toutes</span>
           </label>
-          {JURIDICTIONS.map(j => (
-            <label key={j} className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                name="juridiction"
-                value={j}
-                checked={filters.juridiction === j}
-                onChange={() => update("juridiction", j)}
-                className="accent-blue-500"
-              />
-              <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors leading-snug">{j}</span>
-            </label>
-          ))}
+          {JURIDICTIONS.map(j => {
+            const disponible = JURIDICTIONS_DISPONIBLES.has(j);
+            return (
+              <label key={j} className={`flex items-center gap-2 group ${disponible ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
+                <input
+                  type="radio"
+                  name="juridiction"
+                  value={j}
+                  checked={filters.juridiction === j}
+                  onChange={() => disponible && update("juridiction", j)}
+                  disabled={!disponible}
+                  className="accent-blue-500"
+                />
+                <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors leading-snug">
+                  {j}
+                  {!disponible && <span className="ml-1 text-slate-600">(bientôt)</span>}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </FilterSection>
 

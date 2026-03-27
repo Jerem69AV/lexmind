@@ -26,6 +26,7 @@ export default function ResearchPage() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [queryTime, setQueryTime] = useState<number | null>(null);
+  const [sourcesUsed, setSourcesUsed] = useState<string[]>([]);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -48,6 +49,7 @@ export default function ResearchPage() {
       setTotal(data.total ?? 0);
       setTotalPages(data.total_pages ?? 0);
       setQueryTime(data.query_time_ms ?? null);
+      setSourcesUsed(data.sources_used ?? []);
     } catch (e) {
       console.error(e);
       setResults([]);
@@ -265,9 +267,17 @@ export default function ResearchPage() {
                 <Search size={24} className="text-slate-500" />
               </div>
               <h3 className="text-base font-semibold text-slate-300 mb-2">Aucune décision trouvée</h3>
-              <p className="text-sm text-slate-500 max-w-sm mx-auto">
-                Essayez d&apos;élargir votre recherche ou de modifier les filtres appliqués.
-              </p>
+              {filters.juridiction && filters.juridiction !== "Cour de cassation" ? (
+                <p className="text-sm text-amber-400 max-w-sm mx-auto">
+                  La source <strong>Judilibre</strong> ne couvre que la <strong>Cour de cassation</strong>.
+                  Les juridictions <em>{filters.juridiction}</em>, Conseil d&apos;État, Cours d&apos;appel, etc.
+                  seront disponibles via Légifrance (accès en cours d&apos;ouverture).
+                </p>
+              ) : (
+                <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                  Essayez d&apos;élargir votre recherche ou de modifier les filtres appliqués.
+                </p>
+              )}
               <button
                 onClick={handleReset}
                 className="mt-4 text-sm text-blue-400 hover:text-blue-300"

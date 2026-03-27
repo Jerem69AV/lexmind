@@ -254,6 +254,9 @@ export interface JudilibreSearchResult {
 /**
  * Recherche de décisions dans Judilibre.
  */
+// Juridictions couvertes par Judilibre (Cour de cassation uniquement)
+const JUDILIBRE_JURISDICTIONS = ["Cour de cassation"];
+
 export async function searchJudilibre(
   query: string,
   filters: SearchFilters = {},
@@ -262,9 +265,17 @@ export async function searchJudilibre(
 ): Promise<JudilibreSearchResult> {
   const start = Date.now();
 
+  // Si l'utilisateur filtre sur une juridiction non couverte par Judilibre → résultat vide
+  if (
+    filters.juridiction &&
+    !JUDILIBRE_JURISDICTIONS.includes(filters.juridiction)
+  ) {
+    return { documents: [], total: 0, page, per_page: perPage, total_pages: 0, query_time_ms: 0, source: "judilibre" };
+  }
+
   const params: Record<string, string | number | boolean | string[] | undefined> = {
     query: query || undefined,
-    jurisdiction: "cc", // Cour de cassation
+    jurisdiction: "cc", // Judilibre = Cour de cassation uniquement
     chamber: mapChamberFilter(filters.chambre),
     date_start: filters.date_from || undefined,
     date_end: filters.date_to || undefined,
