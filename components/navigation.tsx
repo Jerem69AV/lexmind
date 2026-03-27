@@ -17,6 +17,9 @@ const navLinks = [
 export function Navigation() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Pas de navigation sur le widget intégrable
+  if (pathname.startsWith("/widget")) return null;
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

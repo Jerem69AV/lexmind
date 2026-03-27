@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Navigation } from "@/components/navigation";
+import { ConditionalFooter } from "@/components/conditional-footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,33 +53,35 @@ export default function RootLayout({
         <Providers>
           <Navigation />
           <main className="flex-1 flex flex-col">{children}</main>
-          <footer
-            className="border-t py-6 mt-auto"
-            style={{ borderColor: "var(--border)", backgroundColor: "var(--sidebar)" }}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-              <p>
-                © {new Date().getFullYear()} AVCA Legal. Données issues de{" "}
-                <a
-                  href="https://www.judilibre.io"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-400 hover:text-slate-200 underline"
-                >
-                  Judilibre
-                </a>{" "}
-                et Légifrance.
-              </p>
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                  Conforme RGPD
-                </span>
-                <span>Mentions légales</span>
-                <span>CGU</span>
+          <ConditionalFooter>
+            <footer
+              className="border-t py-6 mt-auto"
+              style={{ borderColor: "var(--border)", backgroundColor: "var(--sidebar)" }}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+                <p>
+                  © {new Date().getFullYear()} AVCA Legal. Données issues de{" "}
+                  <a
+                    href="https://www.judilibre.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-slate-200 underline"
+                  >
+                    Judilibre
+                  </a>{" "}
+                  et Légifrance.
+                </p>
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    Conforme RGPD
+                  </span>
+                  <span>Mentions légales</span>
+                  <span>CGU</span>
+                </div>
               </div>
-            </div>
-          </footer>
+            </footer>
+          </ConditionalFooter>
         </Providers>
       </body>
     </html>
