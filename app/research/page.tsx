@@ -21,6 +21,7 @@ export default function ResearchPage() {
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [phraseExacte, setPhraseExacte] = useState(true); // phrase exacte par défaut
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<LegalDocumentSummary[]>([]);
   const [total, setTotal] = useState(0);
@@ -34,7 +35,11 @@ export default function ResearchPage() {
     setLoading(true);
     setHasSearched(true);
     try {
-      const params = new URLSearchParams({ query: q, page: String(p), per_page: "10" });
+      // Phrase exacte : entourer de guillemets si plusieurs mots et mode activé
+      const queryToSend = phraseExacte && q.trim().includes(" ")
+        ? `"${q.trim()}"`
+        : q;
+      const params = new URLSearchParams({ query: queryToSend, page: String(p), per_page: "10" });
       if (f.juridiction) params.set("juridiction", f.juridiction);
       if (f.chambre) params.set("chambre", f.chambre);
       if (f.date_from) params.set("date_from", f.date_from);
@@ -56,7 +61,7 @@ export default function ResearchPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [phraseExacte]);
 
   // Search on mount with empty query
   useEffect(() => {
@@ -162,7 +167,7 @@ export default function ResearchPage() {
         </div>
 
         {/* Advanced toggle */}
-        <div className="mt-2 flex items-center gap-4">
+        <div className="mt-2 flex items-center gap-4 flex-wrap">
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
@@ -171,6 +176,18 @@ export default function ResearchPage() {
             <SlidersHorizontal size={11} />
             {showAdvanced ? "Masquer" : "Afficher"} la recherche avancée
           </button>
+
+          {/* Toggle phrase exacte */}
+          <label className="flex items-center gap-1.5 cursor-pointer select-none">
+            <div
+              onClick={() => setPhraseExacte(v => !v)}
+              className={`relative w-7 h-4 rounded-full transition-colors ${phraseExacte ? "bg-blue-600" : "bg-slate-700"}`}
+            >
+              <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform ${phraseExacte ? "translate-x-3.5" : "translate-x-0.5"}`} />
+            </div>
+            <span className="text-xs text-slate-500">Expression exacte</span>
+          </label>
+
           {hasSearched && queryTime !== null && (
             <span className="text-xs text-slate-600">{total} résultats en {queryTime}ms</span>
           )}
