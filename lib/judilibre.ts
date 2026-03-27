@@ -9,11 +9,13 @@
  * et au décret n° 2020-797 du 29 juin 2020.
  */
 
-import { getPisteToken, invalidatePisteToken, PISTE_BASE_API } from "./piste-auth";
+import { getPisteToken, invalidatePisteToken, getPisteBaseApi } from "./piste-auth";
 import type { LegalDocument, LegalDocumentSummary, SearchFilters } from "@/types";
 
-// URL construite dynamiquement selon PISTE_ENV (sandbox ou production)
-const JUDILIBRE_BASE = `${PISTE_BASE_API}/cassation/judilibre/v1.0`;
+// URL calculée dynamiquement à chaque appel via getPisteBaseApi()
+function getJudilibreBase(): string {
+  return `${getPisteBaseApi()}/cassation/judilibre/v1.0`;
+}
 
 // ─── Types internes Judilibre ────────────────────────────────────────────────
 
@@ -192,7 +194,7 @@ async function judilibreRequest<T>(
   const token = await getPisteToken();
 
   // Construire les query params (les arrays deviennent ?param=v1&param=v2)
-  const url = new URL(`${JUDILIBRE_BASE}${endpoint}`);
+  const url = new URL(`${getJudilibreBase()}${endpoint}`);
   for (const [key, value] of Object.entries(params)) {
     if (value === undefined || value === null || value === "") continue;
     if (Array.isArray(value)) {
@@ -276,7 +278,7 @@ export async function searchJudilibre(
       : undefined,
     page_size: perPage,
     page_index: page - 1, // Judilibre est 0-based
-    order: "score",
+    order: "desc",
     resolve_references: true,
   };
 
@@ -319,7 +321,7 @@ export async function getSimilarDecisions(
       jurisdiction: "cc",
       page_size: limit + 1,
       page_index: 0,
-      order: "score",
+      order: "desc",
     });
     return data.results
       .filter(r => r.id !== excludeId)

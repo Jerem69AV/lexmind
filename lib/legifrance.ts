@@ -9,11 +9,12 @@
  * Licence Ouverte 2.0 — attribution obligatoire (source + date MAJ).
  */
 
-import { getPisteToken, invalidatePisteToken, PISTE_BASE_API } from "./piste-auth";
+import { getPisteToken, invalidatePisteToken, getPisteBaseApi } from "./piste-auth";
 import type { LegalDocument, LegalDocumentSummary, SearchFilters } from "@/types";
 
-// URL construite dynamiquement selon PISTE_ENV (sandbox ou production)
-const LEGIFRANCE_BASE = `${PISTE_BASE_API}/dila/legifrance/lf-engine-app`;
+function getLegifranceBase(): string {
+  return `${getPisteBaseApi()}/dila/legifrance/lf-engine-app`;
+}
 
 // ─── Types internes Légifrance ────────────────────────────────────────────────
 
@@ -195,7 +196,7 @@ async function legifranceRequest<T>(
 ): Promise<T> {
   const token = await getPisteToken();
 
-  const response = await fetch(`${LEGIFRANCE_BASE}${endpoint}`, {
+  const response = await fetch(`${getLegifranceBase()}${endpoint}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

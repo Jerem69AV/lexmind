@@ -12,15 +12,26 @@
 //   PRODUCTION → https://oauth.piste.gouv.fr          +  https://api.piste.gouv.fr
 //
 // Mettez PISTE_ENV=production dans .env.local pour passer en production.
-const isSandbox = (process.env.PISTE_ENV ?? "sandbox") !== "production";
 
-export const PISTE_BASE_API = isSandbox
-  ? "https://sandbox-api.piste.gouv.fr"
-  : "https://api.piste.gouv.fr";
+// Fonctions dynamiques — lues à chaque appel pour tenir compte de .env.local
+function isSandbox(): boolean {
+  return (process.env.PISTE_ENV ?? "sandbox") !== "production";
+}
 
-const PISTE_TOKEN_URL = isSandbox
-  ? "https://sandbox-oauth.piste.gouv.fr/api/oauth/token"
-  : "https://oauth.piste.gouv.fr/api/oauth/token";
+export function getPisteBaseApi(): string {
+  return isSandbox()
+    ? "https://sandbox-api.piste.gouv.fr"
+    : "https://api.piste.gouv.fr";
+}
+
+// Alias exporté pour compatibilité (évalué dynamiquement via getter)
+export const PISTE_BASE_API = ""; // deprecated — utiliser getPisteBaseApi()
+
+function getPisteTokenUrl(): string {
+  return isSandbox()
+    ? "https://sandbox-oauth.piste.gouv.fr/api/oauth/token"
+    : "https://oauth.piste.gouv.fr/api/oauth/token";
+}
 
 interface TokenCache {
   access_token: string;
@@ -59,7 +70,7 @@ export async function getPisteToken(): Promise<string> {
     scope: "openid",
   });
 
-  const response = await fetch(PISTE_TOKEN_URL, {
+  const response = await fetch(getPisteTokenUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
