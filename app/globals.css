@@ -1,36 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #e2e8f0;
-  --card: #1e293b;
-  --card-foreground: #e2e8f0;
-  --popover: #1e293b;
-  --popover-foreground: #e2e8f0;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --primary-hover: #2563eb;
-  --secondary: #334155;
-  --secondary-foreground: #cbd5e1;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #1d4ed8;
-  --accent-foreground: #e2e8f0;
+  /* AVCA Legal — thème navy/or */
+  --background: #07111f;
+  --foreground: #e8edf5;
+  --card: #0e1f35;
+  --card-foreground: #e8edf5;
+  --popover: #0e1f35;
+  --popover-foreground: #e8edf5;
+  --primary: #c9a227;
+  --primary-foreground: #07111f;
+  --primary-hover: #d4af37;
+  --secondary: #163050;
+  --secondary-foreground: #c8d6e8;
+  --muted: #0e1f35;
+  --muted-foreground: #7a9ab8;
+  --accent: #c9a227;
+  --accent-foreground: #07111f;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #334155;
-  --input: #334155;
-  --ring: #3b82f6;
+  --border: #1a3a5c;
+  --input: #163050;
+  --ring: #c9a227;
   --radius: 0.5rem;
-  --sidebar: #0d1b2e;
-  --sidebar-foreground: #cbd5e1;
-  --badge-green: #166534;
-  --badge-green-text: #86efac;
-  --badge-yellow: #854d0e;
+  --sidebar: #040e1a;
+  --sidebar-foreground: #c8d6e8;
+  --badge-green: #064e3b;
+  --badge-green-text: #6ee7b7;
+  --badge-yellow: #7c5e0a;
   --badge-yellow-text: #fde68a;
-  --badge-red: #991b1b;
+  --badge-red: #7f1d1d;
   --badge-red-text: #fca5a5;
-  --badge-blue: #1e40af;
+  --badge-blue: #0f3460;
   --badge-blue-text: #93c5fd;
 }
 
@@ -62,7 +63,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: dark only;
 }
 
 body {
@@ -116,8 +117,8 @@ input::placeholder, textarea::placeholder {
 
 /* Highlight for search snippets */
 mark {
-  background-color: rgba(59, 130, 246, 0.3);
-  color: #93c5fd;
+  background-color: rgba(201, 162, 39, 0.25);
+  color: #e8c96a;
   border-radius: 2px;
   padding: 0 2px;
 }
@@ -160,9 +161,9 @@ sup.citation:hover {
   box-shadow: 0 0 0 1px var(--primary);
 }
 
-/* Gradient text */
+/* Gradient text — AVCA or */
 .gradient-text {
-  background: linear-gradient(135deg, #60a5fa, #818cf8);
+  background: linear-gradient(135deg, #c9a227, #e8c96a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

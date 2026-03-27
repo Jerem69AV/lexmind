@@ -74,14 +74,14 @@ export default function HomePage() {
         <div
           className="absolute inset-0 -z-10"
           style={{
-            background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.15) 0%, transparent 60%)",
+            background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,162,39,0.12) 0%, transparent 60%)",
           }}
         />
         {/* Grid pattern */}
         <div
           className="absolute inset-0 -z-10 opacity-20"
           style={{
-            backgroundImage: "linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(201,162,39,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,0.08) 1px, transparent 1px)",
             backgroundSize: "60px 60px",
           }}
         />
@@ -89,16 +89,16 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-8 border"
-            style={{ backgroundColor: "rgba(59,130,246,0.1)", borderColor: "rgba(59,130,246,0.3)", color: "#93c5fd" }}>
+            style={{ backgroundColor: "rgba(201,162,39,0.1)", borderColor: "rgba(201,162,39,0.35)", color: "#e8c96a" }}>
             <Zap size={14} />
-            Plateforme de recherche juridique IA pour la France
+            Cabinet d&apos;avocats Asta-Vola Cannard &amp; Associés
           </div>
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
-            Recherche Juridique
+            AVCA Legal
             <br />
-            <span className="gradient-text">augmentée par l&apos;IA</span>
+            <span className="gradient-text">Agent de recherche juridique</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -141,7 +141,7 @@ export default function HomePage() {
                 <div key={i} className="flex items-center gap-3 text-sm">
                   <span
                     className="text-xs px-1.5 py-0.5 rounded font-mono font-medium flex-shrink-0"
-                    style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#93c5fd" }}
+                    style={{ backgroundColor: "rgba(201,162,39,0.15)", color: "#e8c96a" }}
                   >
                     {d.juridiction}
                   </span>
@@ -180,7 +180,7 @@ export default function HomePage() {
               Tout ce dont les juristes ont besoin
             </h2>
             <p className="text-slate-400 max-w-xl mx-auto">
-              LexMind Research combine recherche plein texte haute performance et intelligence artificielle
+              AVCA Legal Agent combine recherche plein texte haute performance et intelligence artificielle
               pour accélérer votre travail juridique.
             </p>
           </div>
@@ -237,7 +237,7 @@ export default function HomePage() {
               <div key={i} className="text-center">
                 <div
                   className="text-4xl font-black mb-4"
-                  style={{ color: "rgba(59,130,246,0.4)" }}
+                  style={{ color: "rgba(201,162,39,0.45)" }}
                 >
                   {step.step}
                 </div>

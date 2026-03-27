@@ -154,11 +154,11 @@ export default function ResearchPage() {
             onClick={() => setShowFilters(!showFilters)}
             className={cn(
               "flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium border transition-colors",
-              showFilters ? "text-blue-300" : "text-slate-400 hover:text-slate-200"
+              showFilters ? "text-amber-300" : "text-slate-400 hover:text-slate-200"
             )}
             style={{
-              backgroundColor: showFilters ? "rgba(59,130,246,0.1)" : "var(--card)",
-              borderColor: showFilters ? "rgba(59,130,246,0.3)" : "var(--border)",
+              backgroundColor: showFilters ? "rgba(201,162,39,0.1)" : "var(--card)",
+              borderColor: showFilters ? "rgba(201,162,39,0.3)" : "var(--border)",
             }}
           >
             <SlidersHorizontal size={16} />

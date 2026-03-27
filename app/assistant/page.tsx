@@ -213,7 +213,7 @@ function SessionItem({ session, active, onSelect, onDelete }: {
   );
 }
 
-const WELCOME_MESSAGE = `Bonjour ! Je suis l'assistant juridique IA de LexMind Research.
+const WELCOME_MESSAGE = `Bonjour ! Je suis l'assistant juridique IA d'AVCA Legal.
 
 Je peux vous aider à :
 - **Analyser la jurisprudence** sur un sujet précis

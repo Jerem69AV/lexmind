@@ -16,20 +16,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "LexMind Research — Recherche Juridique IA",
-    template: "%s | LexMind Research",
+    default: "AVCA Legal — Agent de recherche juridique",
+    template: "%s | AVCA Legal",
   },
   description:
-    "Plateforme française de recherche juridique augmentée par l'IA. Accédez à 500 000+ décisions, utilisez l'assistant RAG avec citations traçables et exportez en PDF/DOCX/CSV.",
-  keywords: ["jurisprudence", "recherche juridique", "IA", "Judilibre", "Cour de cassation", "droit français"],
-  authors: [{ name: "LexMind Research" }],
-  creator: "LexMind Research",
+    "Agent de recherche juridique IA du cabinet AVCA Legal. Accédez à 500 000+ décisions, utilisez l'assistant RAG avec citations traçables et exportez en PDF/DOCX/CSV.",
+  keywords: ["jurisprudence", "recherche juridique", "IA", "Judilibre", "Cour de cassation", "droit français", "AVCA Legal"],
+  authors: [{ name: "AVCA Legal" }],
+  creator: "AVCA Legal",
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    title: "LexMind Research — Recherche Juridique IA",
-    description: "Plateforme française de recherche juridique augmentée par l'IA",
-    siteName: "LexMind Research",
+    title: "AVCA Legal — Agent de recherche juridique",
+    description: "Agent de recherche juridique IA — Cabinet AVCA Legal",
+    siteName: "AVCA Legal",
   },
   robots: { index: true, follow: true },
 };
@@ -58,7 +58,7 @@ export default function RootLayout({
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
               <p>
-                © {new Date().getFullYear()} LexMind Research. Données issues de{" "}
+                © {new Date().getFullYear()} AVCA Legal. Données issues de{" "}
                 <a
                   href="https://www.judilibre.io"
                   target="_blank"

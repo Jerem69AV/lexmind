@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scale, Search, MessageSquare, LayoutDashboard, LogIn, UserPlus, Menu, X, Moon, Sun } from "lucide-react";
+import { Scale, Search, MessageSquare, LayoutDashboard, LogIn, UserPlus, Menu, X, Moon, Sun, Code2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/research", label: "Recherche", icon: Search },
   { href: "/assistant", label: "Assistant IA", icon: MessageSquare },
   { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
+  { href: "/embed", label: "Widget", icon: Code2 },
 ];
 
 export function Navigation() {
@@ -33,17 +34,17 @@ export function Navigation() {
               style={{ backgroundColor: "var(--primary)" }}
               className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform"
             >
-              <Scale className="w-4.5 h-4.5 text-white" size={18} />
+              <Scale size={18} style={{ color: "var(--primary-foreground)" }} />
             </div>
             <span className="text-lg font-bold tracking-tight">
-              <span className="text-white">Lex</span>
-              <span style={{ color: "var(--primary)" }}>Mind</span>
+              <span className="text-white">AVCA</span>
+              <span style={{ color: "var(--primary)" }}> Legal</span>
             </span>
             <span
-              style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "var(--primary)", border: "1px solid rgba(59,130,246,0.3)" }}
+              style={{ backgroundColor: "rgba(201,162,39,0.15)", color: "var(--primary)", border: "1px solid rgba(201,162,39,0.3)" }}
               className="hidden sm:inline text-xs px-1.5 py-0.5 rounded font-medium"
             >
-              Research
+              Agent IA
             </span>
           </Link>
 
@@ -61,7 +62,7 @@ export function Navigation() {
                       ? "text-white"
                       : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
                   )}
-                  style={active ? { backgroundColor: "rgba(59,130,246,0.2)", color: "#93c5fd" } : {}}
+                  style={active ? { backgroundColor: "rgba(201,162,39,0.15)", color: "#e8c96a" } : {}}
                 >
                   <Icon size={15} />
                   {label}
@@ -125,9 +126,9 @@ export function Navigation() {
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                  active ? "text-blue-300" : "text-slate-400 hover:text-white hover:bg-white/5"
+                  active ? "text-amber-300" : "text-slate-400 hover:text-white hover:bg-white/5"
                 )}
-                style={active ? { backgroundColor: "rgba(59,130,246,0.15)" } : {}}
+                style={active ? { backgroundColor: "rgba(201,162,39,0.12)" } : {}}
               >
                 <Icon size={16} />
                 {label}

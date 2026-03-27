@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { unifiedSearch } from "@/lib/search";
+import { isValidApiKey } from "@/lib/api-keys";
 import type { SearchFilters } from "@/types";
 
 export async function GET(request: NextRequest) {
+  // Valider la clé API si fournie (requêtes widget)
+  const apiKey = request.headers.get("X-API-Key");
+  if (apiKey !== null && !isValidApiKey(apiKey)) {
+    return NextResponse.json({ error: "Clé API invalide" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
 
   const query = searchParams.get("query") ?? "";

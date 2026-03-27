@@ -1,67 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AVCA Legal — Agent de recherche juridique
 
-## Getting Started
+Plateforme de recherche jurisprudentielle IA pour le cabinet **Asta-Vola Cannard & Associés (AVCA Legal)**.
 
-First, run the development server:
+## Fonctionnalités
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Recherche jurisprudentielle** — Judilibre (Cour de cassation) + Légifrance (bientôt)
+- **Assistant IA RAG** — Réponses avec citations traçables
+- **Exports** — PDF, DOCX, CSV
+- **Widget intégrable** — `<iframe>` pour avca-avocats.fr
+- **Clés API** — Accès public contrôlé
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## LexMind Research
-
-Plateforme de recherche juridique augmentée par IA — reconstruction clean-room d'un équivalent de LexMind Research.
-
-### Lancer en local
+## Lancement rapide
 
 ```bash
 npm install
+cp .env.local.example .env.local
+# Renseigner PISTE_CLIENT_ID et PISTE_CLIENT_SECRET dans .env.local
 npm run dev
 ```
 
-Ouvrir [http://localhost:3000](http://localhost:3000).
-
-### Pages
+## Pages
 
 | Route | Description |
 |---|---|
-| `/` | Landing page |
-| `/research` | Recherche jurisprudence |
-| `/research/[id]` | Détail d'une décision |
-| `/assistant` | Assistant RAG juridique |
+| `/` | Page d'accueil |
+| `/research` | Recherche jurisprudentielle |
+| `/assistant` | Assistant IA RAG |
 | `/dashboard` | Tableau de bord |
-| `/auth/login` | Connexion |
-| `/auth/register` | Inscription |
+| `/widget` | Widget intégrable (iframe) |
+| `/embed` | Générateur de code d'intégration |
 
-### Sources de données (licites)
+## Widget / Intégration
 
-- **Judilibre** (API Cour de cassation via PISTE) — Licence Ouverte 2.0
-- **Open data justice administrative** (CE, CAA, TA) — Licence Ouverte 2.0
-- **API Légifrance** (DILA via PISTE) — Licence Ouverte 2.0
+Le widget peut être intégré sur **avca-avocats.fr** via une simple balise `<iframe>` :
+
+```html
+<iframe
+  src="https://your-app.vercel.app/widget?key=avca_public_avca_avocats_fr&theme=dark"
+  width="400"
+  height="600"
+  style="border:none; border-radius:12px;"
+  title="AVCA Legal — Recherche jurisprudentielle"
+></iframe>
+```
+
+Visitez `/embed` pour générer le code avec vos paramètres.
+
+## Sources de données
+
+- **Judilibre** (Cour de cassation) — API officielle via PISTE, Licence Ouverte 2.0
+- **Légifrance** — En attente d'accès DILA (contacter api-legifrance@dila.gouv.fr)
+
+## Variables d'environnement
+
+```env
+PISTE_CLIENT_ID=xxx
+PISTE_CLIENT_SECRET=xxx
+PISTE_ENV=sandbox        # ou production
+DATA_MODE=hybrid         # live | mock | hybrid
+LEGIFRANCE_ENABLED=false # true une fois l'accès obtenu
+AVCA_WIDGET_API_KEY=avca_public_avca_avocats_fr
+```
