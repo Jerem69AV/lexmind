@@ -18,6 +18,9 @@ export function Navigation() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Masquer la navigation sur les pages widget et embed intégré
+  if (pathname.startsWith("/widget")) return null;
+
   // Pas de navigation sur le widget intégrable
   if (pathname.startsWith("/widget")) return null;
   const { resolvedTheme, setTheme } = useTheme();
