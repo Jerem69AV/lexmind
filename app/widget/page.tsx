@@ -173,8 +173,9 @@ function WidgetContent() {
               {results.map(doc => (
                 <a
                   key={doc.id}
-                  href={`/decisions/${doc.id}`}
-                  target="_top"
+                  href={`/research/${doc.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block rounded-lg p-3 border transition-colors hover:brightness-110"
                   style={{ backgroundColor: styles.card, borderColor: styles.border, textDecoration: "none" }}
                 >
