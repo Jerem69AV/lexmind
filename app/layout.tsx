@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import { Providers } from "@/components/providers";
 import { Navigation } from "@/components/navigation";
 import "./globals.css";
 
@@ -49,12 +49,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col"
         style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        <Providers>
           <Navigation />
           <main className="flex-1 flex flex-col">{children}</main>
           <footer
@@ -84,7 +79,7 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
