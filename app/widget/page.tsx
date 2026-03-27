@@ -178,8 +178,7 @@ function WidgetContent() {
                 <a
                   key={doc.id}
                   href={`${appOrigin}/research/${doc.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_top"
                   className="block rounded-lg p-3 border transition-colors hover:brightness-110"
                   style={{ backgroundColor: styles.card, borderColor: styles.border, textDecoration: "none" }}
                 >
