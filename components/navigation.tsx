@@ -80,11 +80,11 @@ export function Navigation() {
               href="https://avca-avocats.fr"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:brightness-110"
-              style={{ backgroundColor: "rgba(201,162,39,0.12)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.25)" }}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition-all hover:brightness-110"
+              style={{ backgroundColor: "#c9a227", color: "#07111f" }}
             >
-              <ArrowLeft size={12} />
-              avca-avocats.fr
+              <ArrowLeft size={13} />
+              Retour AVCA Legal
             </a>
             {/* Theme toggle */}
             <button
