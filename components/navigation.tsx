@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scale, Search, MessageSquare, LayoutDashboard, LogIn, UserPlus, Menu, X, Moon, Sun, Code2 } from "lucide-react";
+import { Scale, Search, MessageSquare, LayoutDashboard, LogIn, UserPlus, Menu, X, Moon, Sun, Code2, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -18,10 +18,6 @@ export function Navigation() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Masquer la navigation sur les pages widget et embed intégré
-  if (pathname.startsWith("/widget")) return null;
-
-  // Pas de navigation sur le widget intégrable
   if (pathname.startsWith("/widget")) return null;
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -79,6 +75,17 @@ export function Navigation() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {/* Retour cabinet */}
+            <a
+              href="https://avca-avocats.fr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all hover:brightness-110"
+              style={{ backgroundColor: "rgba(201,162,39,0.12)", color: "#c9a227", border: "1px solid rgba(201,162,39,0.25)" }}
+            >
+              <ArrowLeft size={12} />
+              avca-avocats.fr
+            </a>
             {/* Theme toggle */}
             <button
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
