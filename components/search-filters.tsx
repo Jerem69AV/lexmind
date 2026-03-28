@@ -60,7 +60,8 @@ function FilterSection({
     <div className="border-b" style={{ borderColor: "var(--border)" }}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors"
+        style={{ color: "var(--foreground)" }}
       >
         {title}
         {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -95,11 +96,11 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
         className="flex items-center justify-between px-4 py-3 border-b"
         style={{ borderColor: "var(--border)" }}
       >
-        <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+        <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--foreground)" }}>
           <Filter size={14} style={{ color: "var(--primary)" }} />
           Filtres
           {resultCount !== undefined && (
-            <span className="ml-auto text-xs text-slate-500">{resultCount} résultat{resultCount > 1 ? "s" : ""}</span>
+            <span className="ml-auto text-xs" style={{ color: "var(--muted-foreground)" }}>{resultCount} résultat{resultCount > 1 ? "s" : ""}</span>
           )}
         </div>
         {hasActiveFilters && (
@@ -125,7 +126,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
               onChange={() => update("juridiction", "")}
               className="accent-blue-500"
             />
-            <span className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">Toutes</span>
+            <span className="text-sm transition-colors" style={{ color: "var(--foreground)" }}>Toutes</span>
           </label>
           {JURIDICTIONS.map(j => {
             const disponible = JURIDICTIONS_DISPONIBLES.has(j);
@@ -140,7 +141,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
                   disabled={!disponible}
                   className="accent-blue-500"
                 />
-                <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors leading-snug">
+                <span className="text-xs transition-colors leading-snug" style={{ color: "var(--foreground)" }}>
                   {j}
                   {!disponible && <span className="ml-1 text-slate-600">(bientôt)</span>}
                 </span>
@@ -178,7 +179,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
       <FilterSection title="Période">
         <div className="space-y-2">
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Du</label>
+            <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Du</label>
             <input
               type="date"
               value={filters.date_from ?? ""}
@@ -192,7 +193,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
             />
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Au</label>
+            <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Au</label>
             <input
               type="date"
               value={filters.date_to ?? ""}
@@ -220,7 +221,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
               onChange={() => update("solution", "")}
               className="accent-blue-500"
             />
-            <span className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">Toutes</span>
+            <span className="text-sm transition-colors" style={{ color: "var(--foreground)" }}>Toutes</span>
           </label>
           {SOLUTIONS.map(s => (
             <label key={s} className="flex items-center gap-2 cursor-pointer group">
@@ -232,7 +233,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
                 onChange={() => update("solution", s)}
                 className="accent-blue-500"
               />
-              <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors">{s}</span>
+              <span className="text-xs transition-colors" style={{ color: "var(--foreground)" }}>{s}</span>
             </label>
           ))}
         </div>
@@ -250,7 +251,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
               onChange={() => update("publication", "")}
               className="accent-blue-500"
             />
-            <span className="text-sm text-slate-400 group-hover:text-slate-200 transition-colors">Toutes</span>
+            <span className="text-sm transition-colors" style={{ color: "var(--foreground)" }}>Toutes</span>
           </label>
           {PUBLICATIONS.map(p => (
             <label key={p} className="flex items-center gap-2 cursor-pointer group">
@@ -262,7 +263,7 @@ export function SearchFiltersPanel({ filters, onChange, onReset, resultCount }: 
                 onChange={() => update("publication", p)}
                 className="accent-blue-500"
               />
-              <span className="text-xs text-slate-400 group-hover:text-slate-200 transition-colors">{p}</span>
+              <span className="text-xs transition-colors" style={{ color: "var(--foreground)" }}>{p}</span>
             </label>
           ))}
         </div>

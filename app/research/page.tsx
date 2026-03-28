@@ -106,8 +106,8 @@ export default function ResearchPage() {
     <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8">
       {/* Page header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-1">Recherche jurisprudentielle</h1>
-        <p className="text-sm text-slate-500">Interrogez la base de données de décisions françaises</p>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: "var(--foreground)" }}>Recherche jurisprudentielle</h1>
+        <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>Interrogez la base de données de décisions françaises</p>
       </div>
 
       {/* Search bar */}
@@ -152,13 +152,11 @@ export default function ResearchPage() {
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium border transition-colors",
-              showFilters ? "text-amber-300" : "text-slate-400 hover:text-slate-200"
-            )}
+            className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium border transition-colors"
             style={{
               backgroundColor: showFilters ? "rgba(201,162,39,0.1)" : "var(--card)",
               borderColor: showFilters ? "rgba(201,162,39,0.3)" : "var(--border)",
+              color: showFilters ? "#c9a227" : "var(--foreground)",
             }}
           >
             <SlidersHorizontal size={16} />
@@ -229,18 +227,19 @@ export default function ResearchPage() {
           {/* Results header */}
           {hasSearched && !loading && (
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-slate-400">
+              <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
                 {total > 0
-                  ? <><span className="text-white font-medium">{total}</span> décision{total > 1 ? "s" : ""} trouvée{total > 1 ? "s" : ""}{query ? ` pour « ${query} »` : ""}</>
+                  ? <><span className="font-medium" style={{ color: "var(--foreground)" }}>{total}</span> décision{total > 1 ? "s" : ""} trouvée{total > 1 ? "s" : ""}{query ? ` pour « ${query} »` : ""}</>
                   : "Aucune décision trouvée"
                 }
               </p>
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="flex items-center gap-2 text-xs" style={{ color: "var(--muted-foreground)" }}>
                 <SortAsc size={13} />
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value)}
-                  className="bg-transparent text-slate-400 border border-slate-700 rounded px-2 py-1 text-xs focus:outline-none"
+                  className="bg-transparent rounded px-2 py-1 text-xs focus:outline-none"
+                  style={{ color: "var(--foreground)", border: "1px solid var(--border)" }}
                 >
                   {SORT_OPTIONS.map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -283,7 +282,7 @@ export default function ResearchPage() {
               >
                 <Search size={24} className="text-slate-500" />
               </div>
-              <h3 className="text-base font-semibold text-slate-300 mb-2">Aucune décision trouvée</h3>
+              <h3 className="text-base font-semibold mb-2" style={{ color: "var(--foreground)" }}>Aucune décision trouvée</h3>
               {filters.juridiction && filters.juridiction !== "Cour de cassation" ? (
                 <p className="text-sm text-amber-400 max-w-sm mx-auto">
                   La source <strong>Judilibre</strong> ne couvre que la <strong>Cour de cassation</strong>.
@@ -310,8 +309,8 @@ export default function ResearchPage() {
               <button
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page === 1}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm border text-slate-400 hover:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                style={{ borderColor: "var(--border)", backgroundColor: "var(--card)" }}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                style={{ borderColor: "var(--border)", backgroundColor: "var(--card)", color: "var(--foreground)" }}
               >
                 <ChevronLeft size={15} />
                 Précédent
@@ -339,8 +338,8 @@ export default function ResearchPage() {
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page === totalPages}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm border text-slate-400 hover:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                style={{ borderColor: "var(--border)", backgroundColor: "var(--card)" }}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm border disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                style={{ borderColor: "var(--border)", backgroundColor: "var(--card)", color: "var(--foreground)" }}
               >
                 Suivant
                 <ChevronRight size={15} />
