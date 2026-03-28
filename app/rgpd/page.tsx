@@ -34,33 +34,20 @@ export default function RgpdPage() {
 
           <div className="mt-4 space-y-4">
             <div className="p-4 rounded-lg border" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-              <p className="font-semibold mb-2">Données de navigation</p>
-              <ul className="space-y-1 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
-                <li>Adresse IP (anonymisée après 24h)</li>
-                <li>Type de navigateur et système d'exploitation</li>
-                <li>Pages visitées et durée de consultation</li>
-                <li>Date et heure de connexion</li>
-              </ul>
-              <p className="mt-2 text-xs" style={{ color: "var(--muted-foreground)" }}>
-                <strong style={{ color: "var(--foreground)" }}>Base légale :</strong> Intérêt légitime (sécurité et amélioration du Service) — Article 6(1)(f) RGPD
-              </p>
-            </div>
-
-            <div className="p-4 rounded-lg border" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
               <p className="font-semibold mb-2">Requêtes de recherche</p>
               <ul className="space-y-1 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
-                <li>Termes de recherche saisis (anonymisés, non liés à une identité)</li>
-                <li>Filtres appliqués (juridiction, chambre, période)</li>
+                <li>Termes de recherche saisis (transmis à l'API Judilibre, non stockés par AVCA Legal)</li>
+                <li>Filtres appliqués (juridiction, chambre, période) — transmis à l'API, non conservés</li>
               </ul>
               <p className="mt-2 text-xs" style={{ color: "var(--muted-foreground)" }}>
-                <strong style={{ color: "var(--foreground)" }}>Base légale :</strong> Intérêt légitime (amélioration des algorithmes) — Article 6(1)(f) RGPD
+                <strong style={{ color: "var(--foreground)" }}>Base légale :</strong> Exécution du service demandé — Article 6(1)(b) RGPD
               </p>
             </div>
 
             <div className="p-4 rounded-lg border" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
               <p className="font-semibold mb-2">Préférences d'affichage</p>
               <ul className="space-y-1 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
-                <li>Thème clair/sombre (stocké localement via cookie technique)</li>
+                <li>Thème clair/sombre (stocké uniquement dans le navigateur de l'utilisateur via cookie technique local)</li>
               </ul>
               <p className="mt-2 text-xs" style={{ color: "var(--muted-foreground)" }}>
                 <strong style={{ color: "var(--foreground)" }}>Base légale :</strong> Cookie strictement nécessaire — exemption de consentement (article 82 loi Informatique et Libertés)
@@ -69,7 +56,7 @@ export default function RgpdPage() {
           </div>
 
           <div className="mt-4 p-3 rounded-lg border-l-4 font-medium" style={{ borderColor: "var(--primary)", backgroundColor: "rgba(201,162,39,0.06)" }}>
-            Le Service ne collecte <strong>aucune donnée personnelle directement identifiable</strong> (nom, prénom, email, numéro de téléphone) sans consentement explicite.
+            Le Service <strong>ne collecte ni ne stocke aucune adresse IP, aucun log de navigation</strong> et aucune donnée personnelle identifiable. Aucun traçage ou profilage de l'utilisateur n'est effectué.
           </div>
         </section>
 
@@ -85,10 +72,8 @@ export default function RgpdPage() {
               </thead>
               <tbody style={{ backgroundColor: "var(--card)" }}>
                 {[
-                  ["Logs de navigation (IP)", "24 heures puis anonymisation"],
-                  ["Logs techniques (sécurité)", "12 mois"],
-                  ["Requêtes de recherche (anonymisées)", "6 mois"],
-                  ["Cookies de préférences", "12 mois (ou suppression par l'utilisateur)"],
+                  ["Requêtes de recherche", "Non stockées — transmises à l'API Judilibre et traitées en temps réel"],
+                  ["Cookies de préférences (thème)", "12 mois dans le navigateur (ou suppression par l'utilisateur)"],
                 ].map(([cat, dur], i) => (
                   <tr key={i} className="border-t" style={{ borderColor: "var(--border)" }}>
                     <td className="px-4 py-2">{cat}</td>
@@ -184,8 +169,7 @@ export default function RgpdPage() {
           </p>
           <ul className="mt-3 space-y-1 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
             <li>Chiffrement des communications (HTTPS / TLS 1.3) ;</li>
-            <li>Accès restreint aux données par authentification forte ;</li>
-            <li>Anonymisation des logs dans les délais précisés ;</li>
+            <li>Aucun stockage de données personnelles côté serveur ;</li>
             <li>Hébergement sur infrastructure sécurisée (Vercel, certifié SOC 2 Type II).</li>
           </ul>
         </section>
