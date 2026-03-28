@@ -183,12 +183,14 @@ function WidgetContent() {
             </p>
             <div className="space-y-2">
               {results.map(doc => (
-                <a
+                <div
                   key={doc.id}
-                  href={`${appOrigin}/research/${doc.id}`}
-                  target="_top"
-                  className="block rounded-lg p-3 border transition-colors hover:brightness-110"
-                  style={{ backgroundColor: styles.card, borderColor: styles.border, textDecoration: "none" }}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => window.open(`${appOrigin}/research/${doc.id}`, "_blank", "noopener")}
+                  onKeyDown={e => e.key === "Enter" && window.open(`${appOrigin}/research/${doc.id}`, "_blank", "noopener")}
+                  className="block rounded-lg p-3 border transition-colors hover:brightness-110 cursor-pointer"
+                  style={{ backgroundColor: styles.card, borderColor: styles.border }}
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <span className="text-xs font-semibold leading-tight" style={{ color: styles.text }}>
@@ -218,7 +220,7 @@ function WidgetContent() {
                       {doc.snippet}
                     </p>
                   )}
-                </a>
+                </div>
               ))}
             </div>
 
