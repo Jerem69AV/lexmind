@@ -56,7 +56,8 @@ export default function RgpdPage() {
           </div>
 
           <div className="mt-4 p-3 rounded-lg border-l-4 font-medium" style={{ borderColor: "var(--primary)", backgroundColor: "rgba(201,162,39,0.06)" }}>
-            Le Service <strong>ne collecte ni ne stocke aucune adresse IP, aucun log de navigation</strong> et aucune donnée personnelle identifiable. Aucun traçage ou profilage de l'utilisateur n'est effectué.
+            AVCA Legal <strong>ne collecte ni ne stocke directement</strong> aucune adresse IP ni aucun log de navigation. Aucun traçage ou profilage de l'utilisateur n'est effectué par AVCA Legal.
+            En revanche, l'hébergeur Vercel Inc., agissant en qualité de <strong>sous-traitant</strong>, collecte automatiquement les adresses IP dans ses logs serveur à des fins techniques et de sécurité, dans le cadre de son infrastructure. Ce traitement est encadré par un accord de traitement des données (DPA) conclu avec Vercel, conformément à l'article 28 du RGPD.
           </div>
         </section>
 
@@ -72,7 +73,8 @@ export default function RgpdPage() {
               </thead>
               <tbody style={{ backgroundColor: "var(--card)" }}>
                 {[
-                  ["Requêtes de recherche", "Non stockées — transmises à l'API Judilibre et traitées en temps réel"],
+                  ["Requêtes de recherche", "Non stockées par AVCA Legal — transmises à l'API Judilibre en temps réel"],
+                  ["Logs serveur Vercel (IP)", "30 jours max (sous-traitant Vercel, hors contrôle direct d'AVCA Legal)"],
                   ["Cookies de préférences (thème)", "12 mois dans le navigateur (ou suppression par l'utilisateur)"],
                 ].map(([cat, dur], i) => (
                   <tr key={i} className="border-t" style={{ borderColor: "var(--border)" }}>
@@ -89,9 +91,18 @@ export default function RgpdPage() {
           <h2 className="text-base font-semibold mb-3" style={{ color: "var(--primary)" }}>4. Destinataires des données</h2>
           <p>Les données collectées sont accessibles uniquement à :</p>
           <ul className="mt-3 space-y-2 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
-            <li><strong style={{ color: "var(--foreground)" }}>AVCA Legal</strong> (équipe technique interne) — administration du Service ;</li>
-            <li><strong style={{ color: "var(--foreground)" }}>Vercel Inc.</strong> — hébergeur (serveurs en Europe et États-Unis, encadré par les clauses contractuelles types de la Commission européenne) ;</li>
-            <li><strong style={{ color: "var(--foreground)" }}>Anthropic / OpenAI</strong> (selon le modèle IA utilisé) — traitement des requêtes de l'assistant IA, sans association à une identité personnelle.</li>
+            <li>
+              <strong style={{ color: "var(--foreground)" }}>AVCA Legal</strong> — responsable de traitement, administration du Service ;
+            </li>
+            <li>
+              <strong style={{ color: "var(--foreground)" }}>Vercel Inc.</strong> — sous-traitant hébergeur (article 28 RGPD), logs serveur incluant IP conservés max. 30 jours. Encadré par DPA Vercel et clauses contractuelles types (CCT) de la Commission européenne. Certifié SOC 2 Type II. <a href="https://vercel.com/legal/dpa" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--primary)" }}>Consulter le DPA Vercel</a> ;
+            </li>
+            <li>
+              <strong style={{ color: "var(--foreground)" }}>Cour de cassation / DILA</strong> — fournisseurs de données publiques (Judilibre, Légifrance), aucune donnée utilisateur transmise au-delà des requêtes de recherche anonymes ;
+            </li>
+            <li>
+              <strong style={{ color: "var(--foreground)" }}>Anthropic</strong> — sous-traitant IA pour l'assistant juridique, requêtes transmises sans identifiant personnel. Encadré par DPA Anthropic.
+            </li>
           </ul>
           <p className="mt-3">
             Aucune donnée n'est vendue, louée ou cédée à des tiers à des fins commerciales.
