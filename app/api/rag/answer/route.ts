@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_DECISIONS, MOCK_RAG_TEMPLATES } from "@/lib/mock-data";
+import Anthropic from "@anthropic-ai/sdk";
+import { unifiedSearch } from "@/lib/search";
 import type { RAGResponse, UsedDocument, Citation } from "@/types";
+
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,41 +16,82 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "La question est requise" }, { status: 400 });
     }
 
-    // Simulate RAG processing time
-    await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+    const start = Date.now();
 
-    // Find best template match
-    const questionLower = question.toLowerCase();
-    let template = MOCK_RAG_TEMPLATES.find(t =>
-      questionLower.includes(t.keyword) || t.keyword.split(" ").some(k => questionLower.includes(k))
-    );
+    // ── 1. Recherche Judilibre ─────────────────────────────────────────────────
+    const searchResult = await unifiedSearch(question, {}, 1, 8, ["judilibre"]);
+    const docs = searchResult.documents.slice(0, 5);
 
-    if (!template) {
-      template = MOCK_RAG_TEMPLATES[Math.floor(Math.random() * MOCK_RAG_TEMPLATES.length)];
+    // ── 2. Construire le contexte pour Claude ──────────────────────────────────
+    const docsContext = docs.length > 0
+      ? docs.map((doc, i) => {
+          return `[${i + 1}] ${doc.title}
+Juridiction : ${doc.juridiction} | Chambre : ${doc.chambre ?? "N/A"} | Date : ${doc.date} | Solution : ${doc.solution ?? "N/A"}
+ECLI : ${doc.ecli ?? "N/A"}
+Résumé : ${doc.sommaire.substring(0, 600)}`;
+        }).join("\n\n")
+      : "Aucune décision trouvée dans la base Judilibre pour cette question.";
+
+    const systemPrompt = mode === "strict"
+      ? `Tu es un assistant juridique expert en droit français. Tu analyses la jurisprudence de la Cour de cassation et des juridictions françaises.
+Réponds UNIQUEMENT en te basant sur les décisions fournies. Si les décisions ne couvrent pas la question, dis-le clairement.
+Ne jamais inventer de références jurisprudentielles. Chaque affirmation doit être sourcée avec [N] correspondant au numéro de la décision.
+Ta réponse est purement informative et ne constitue pas un conseil juridique.`
+      : `Tu es un assistant juridique expert en droit français. Tu analyses la jurisprudence et peux enrichir avec des principes généraux du droit.
+Appuie-toi principalement sur les décisions fournies, mais tu peux mentionner des tendances doctrinales générales.
+Chaque référence à une décision fournie doit être sourcée avec [N]. Ne jamais inventer d'ECLI ou de numéro d'arrêt.
+Ta réponse est purement informative et ne constitue pas un conseil juridique.`;
+
+    const userPrompt = `Question juridique : "${question}"
+
+Décisions jurisprudentielles disponibles :
+${docsContext}
+
+Réponds en JSON strictement valide avec cette structure exacte :
+{
+  "synthese": "Paragraphe d'introduction synthétisant la réponse (2-3 phrases, utilise [N] pour citer)",
+  "sections": [
+    {
+      "title": "Titre de la section",
+      "content": "Développement avec citations [N]",
+      "citations": [1, 2]
     }
+  ],
+  "confidence": 0.85
+}
 
-    // Pick relevant documents
-    const relevantDocs = MOCK_DECISIONS
-      .filter(doc => {
-        const docText = [doc.title, doc.sommaire, ...doc.themes].join(" ").toLowerCase();
-        const terms = questionLower.split(/\s+/).filter((w: string) => w.length > 4);
-        return terms.some((t: string) => docText.includes(t));
-      })
-      .slice(0, 5);
+Génère 2 à 4 sections thématiques. La confidence doit refléter honnêtement la pertinence des décisions trouvées (entre 0.3 et 0.95).`;
 
-    const docsToUse = relevantDocs.length >= 2 ? relevantDocs : MOCK_DECISIONS.slice(0, 5);
+    // ── 3. Appel Claude ────────────────────────────────────────────────────────
+    const claudeResponse = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 2000,
+      messages: [{ role: "user", content: userPrompt }],
+      system: systemPrompt,
+    });
 
-    const usedDocuments: UsedDocument[] = docsToUse.slice(0, 4).map((doc, index) => ({
+    const rawText = claudeResponse.content[0].type === "text"
+      ? claudeResponse.content[0].text
+      : "";
+
+    // Extraire le JSON de la réponse
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("Réponse Claude invalide");
+
+    const parsed = JSON.parse(jsonMatch[0]);
+
+    // ── 4. Construire la réponse structurée ────────────────────────────────────
+    const usedDocuments: UsedDocument[] = docs.map((doc, index) => ({
       index: index + 1,
       id: doc.id,
-      ecli: doc.ecli,
+      ecli: doc.ecli ?? "",
       title: doc.title,
       juridiction: doc.juridiction,
-      chambre: doc.chambre,
+      chambre: doc.chambre ?? "",
       date: doc.date,
-      solution: doc.solution,
-      excerpt: doc.sommaire.substring(0, 200) + "...",
-      relevance_score: Math.round((0.95 - index * 0.07) * 100) / 100,
+      solution: doc.solution ?? "",
+      excerpt: doc.sommaire.substring(0, 250) + (doc.sommaire.length > 250 ? "..." : ""),
+      relevance_score: Math.round(((doc.score ?? 0.7) - index * 0.05) * 100) / 100,
     }));
 
     const citations: Citation[] = usedDocuments.map(doc => ({
@@ -59,31 +105,30 @@ export async function POST(request: NextRequest) {
       relevance: doc.relevance_score,
     }));
 
-    const sections = template.sections.map((s, i) => ({
+    const sections = (parsed.sections ?? []).map((s: { title: string; content: string; citations?: number[] }) => ({
       title: s.title,
       content: s.content,
-      citations: s.citations.map(c => Math.min(c + 1, usedDocuments.length)),
+      citations: (s.citations ?? []).filter((c: number) => c >= 1 && c <= usedDocuments.length),
     }));
-
-    const synthese = mode === "strict"
-      ? `Sur la base des décisions de jurisprudence identifiées, voici une synthèse structurée relative à votre question : « ${question} ». Cette réponse s'appuie sur ${usedDocuments.length} décisions jurisprudentielles pertinentes issues de la base Judilibre. Elle ne constitue pas un avis juridique et ne saurait remplacer le conseil d'un professionnel du droit.`
-      : `La question relative à « ${question} » soulève plusieurs problématiques juridiques que la jurisprudence a progressivement précisées. En mode exploratoire, cette analyse s'appuie sur ${usedDocuments.length} décisions et intègre également des considérations doctrinales. Notez que certaines positions exposées ici font encore l'objet de débats.`;
 
     const response: RAGResponse = {
       question,
       mode,
-      synthese,
+      synthese: parsed.synthese ?? "",
       sections,
       used_documents: usedDocuments,
       citations,
-      confidence: mode === "strict" ? 0.87 : 0.72,
-      disclaimer: "Cette réponse est générée automatiquement à partir de données jurisprudentielles et ne constitue pas un avis juridique. Consultez un avocat pour toute situation particulière. Conformité RGPD assurée — aucune donnée personnelle n'est traitée.",
-      response_time_ms: Math.floor(Math.random() * 800) + 600,
+      confidence: Math.min(0.95, Math.max(0.3, parsed.confidence ?? 0.7)),
+      disclaimer: "Cette réponse est générée automatiquement à partir de décisions jurisprudentielles officielles (Judilibre) et ne constitue pas un avis juridique. Consultez un avocat pour toute situation particulière.",
+      response_time_ms: Date.now() - start,
     };
 
     return NextResponse.json(response);
   } catch (error) {
     console.error("RAG error:", error);
-    return NextResponse.json({ error: "Erreur lors du traitement de la question" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors du traitement de la question. Vérifiez la configuration ANTHROPIC_API_KEY." },
+      { status: 500 }
+    );
   }
 }
