@@ -1,7 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  /* AVCA Legal — thème navy/or */
+  /* AVCA Legal — thème clair (défaut) */
+  --background: #f5f6fa;
+  --foreground: #0d1f3c;
+  --card: #ffffff;
+  --card-foreground: #0d1f3c;
+  --popover: #ffffff;
+  --popover-foreground: #0d1f3c;
+  --primary: #c9a227;
+  --primary-foreground: #ffffff;
+  --primary-hover: #d4af37;
+  --secondary: #e8edf5;
+  --secondary-foreground: #0d1f3c;
+  --muted: #edf1f7;
+  --muted-foreground: #5a7090;
+  --accent: #c9a227;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #d4dde8;
+  --input: #ffffff;
+  --ring: #c9a227;
+  --radius: 0.5rem;
+  --sidebar: #0d1f3c;
+  --sidebar-foreground: #ffffff;
+  --badge-green: #d1fae5;
+  --badge-green-text: #065f46;
+  --badge-yellow: #fef3c7;
+  --badge-yellow-text: #92400e;
+  --badge-red: #fee2e2;
+  --badge-red-text: #991b1b;
+  --badge-blue: #dbeafe;
+  --badge-blue-text: #1e40af;
+}
+
+.dark {
+  /* AVCA Legal — thème sombre */
   --background: #07111f;
   --foreground: #e8edf5;
   --card: #0e1f35;
@@ -63,7 +98,10 @@
 }
 
 html {
-  color-scheme: dark only;
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
