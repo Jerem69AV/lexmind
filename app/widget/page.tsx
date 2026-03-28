@@ -97,12 +97,12 @@ function WidgetContent() {
 
   const isDark = theme !== "light";
   const s = {
-    bg: isDark ? "#07111f" : "#ffffff",
-    card: isDark ? "#0e1f35" : "#f8f9fa",
-    border: isDark ? "#1a3a5c" : "#dde3eb",
-    text: isDark ? "#e8edf5" : "#0A2540",
-    muted: isDark ? "#7a9ab8" : "#6c7a8a",
-    filterBg: isDark ? "#040e1a" : "#f0f4f8",
+    bg: isDark ? "#0d1f3c" : "#ffffff",
+    card: isDark ? "#122035" : "#f5f6fa",
+    border: isDark ? "#1e3a5f" : "#d4dde8",
+    text: isDark ? "#e8edf5" : "#0d1f3c",
+    muted: isDark ? "#7a9ab8" : "#5a7090",
+    filterBg: isDark ? "#081425" : "#edf1f7",
   };
 
   const selectStyle: React.CSSProperties = {
@@ -121,7 +121,7 @@ function WidgetContent() {
     <div className="flex flex-col min-h-screen text-sm font-sans" style={{ backgroundColor: s.bg, color: s.text }}>
 
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ backgroundColor: isDark ? "#040e1a" : "#0A2540", borderColor: s.border }}>
+      <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ backgroundColor: isDark ? "#081425" : "#0d1f3c", borderColor: s.border }}>
         <div className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#c9a227" }}>
           <Scale size={13} style={{ color: "#07111f" }} />
         </div>
@@ -312,7 +312,7 @@ function WidgetContent() {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 border-t text-center" style={{ borderColor: s.border, backgroundColor: isDark ? "#040e1a" : "#f0f2f5" }}>
+      <div className="px-4 py-2 border-t text-center" style={{ borderColor: s.border, backgroundColor: isDark ? "#081425" : "#edf1f7" }}>
         <p className="text-xs" style={{ color: s.muted }}>
           Données <a href="https://www.judilibre.io" target="_blank" rel="noopener noreferrer" style={{ color: "#c9a227" }}>Judilibre</a> · Licence Ouverte 2.0
         </p>
