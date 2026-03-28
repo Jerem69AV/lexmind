@@ -89,7 +89,7 @@ export default function DecisionDetailPage() {
           <h2 className="text-lg font-semibold text-slate-200 mb-2">Décision introuvable</h2>
           <p className="text-sm text-slate-500 mb-4">{error}</p>
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push("/research")}
             className="text-sm text-blue-400 hover:text-blue-300"
           >
             Retour aux résultats
@@ -120,7 +120,7 @@ export default function DecisionDetailPage() {
           {/* Back button + title */}
           <div className="flex items-start gap-3 mb-6">
             <button
-              onClick={() => window.history.length > 1 ? router.back() : router.push("/research")}
+              onClick={() => router.push("/research")}
               className="flex-shrink-0 mt-1 p-1.5 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors"
             >
               <ArrowLeft size={18} />
