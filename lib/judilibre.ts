@@ -147,6 +147,13 @@ function extractSnippet(text: string, query: string, maxLen = 250): string {
   return snippet;
 }
 
+/** Extrait une string depuis une valeur qui peut être string ou {title: string} */
+function extractString(val: unknown): string {
+  if (typeof val === "string") return val;
+  if (val && typeof val === "object" && "title" in val) return String((val as { title: unknown }).title ?? "");
+  return "";
+}
+
 /** Convertit une décision brute Judilibre en LegalDocument unifié */
 function rawToLegalDocument(raw: JudilibreRawDecision): LegalDocument {
   const chamberLabel = CHAMBER_LABELS[raw.chamber?.toLowerCase()] ?? raw.chamber ?? "";
@@ -165,13 +172,14 @@ function rawToLegalDocument(raw: JudilibreRawDecision): LegalDocument {
     publication: (pubLabels[0] || "Inédit") as LegalDocument["publication"],
     sommaire: raw.summary ?? "",
     texte: raw.text ?? "",
-    visa: raw.visa ?? [],
+    // resolve_references: true peut retourner string[] ou {title:string}[]
+    visa: (raw.visa ?? []).map(extractString).filter(Boolean),
     renvois: (raw.rapprochements ?? []).map(r => ({
       type: "citation" as const,
-      texte: r.title,
+      texte: extractString(r.title),
       id: r.id,
     })),
-    themes: raw.themes ?? [],
+    themes: (raw.themes ?? []).map(extractString).filter(Boolean),
     source: "judilibre",
     score: raw.score,
   };
