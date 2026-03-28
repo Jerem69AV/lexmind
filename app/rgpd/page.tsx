@@ -23,7 +23,8 @@ export default function RgpdPage() {
             <p><strong>Cabinet Asta-Vola Cannard &amp; Associés (AVCA Legal)</strong></p>
             <p>Cabinet d'avocats au Barreau de Thonon-les-Bains</p>
             <p>Thonon-les-Bains (74200), France</p>
-            <p className="mt-2">Contact DPO : <a href="mailto:contact@avca-avocats.fr" className="underline" style={{ color: "var(--primary)" }}>contact@avca-avocats.fr</a></p>
+            <p className="mt-2">Responsable de traitement : <strong>Maître Jérémy ASTA-VOLA</strong></p>
+            <p>Contact : <a href="mailto:contact@avca-avocats.fr" className="underline" style={{ color: "var(--primary)" }}>contact@avca-avocats.fr</a></p>
           </div>
         </section>
 
