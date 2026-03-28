@@ -536,8 +536,11 @@ export default function AssistantPage() {
                 </button>
               </div>
             </div>
-            <p className="text-xs mt-2 text-center" style={{ color: "var(--muted-foreground)" }}>
-              Judilibre · {webSearch ? <span style={{ color: "var(--primary)", fontWeight: 600 }}>Recherche web activée</span> : "Recherche web désactivée — cliquer sur Web pour l'activer"} · Ne constitue pas un avis juridique
+            <p className="text-xs mt-2 text-center" style={{ color: "var(--primary)", fontWeight: 500 }}>
+              Judilibre · {webSearch
+                ? <span style={{ fontWeight: 700 }}>Recherche web activée</span>
+                : <span>Recherche web désactivée — cliquer sur <strong>Web</strong> pour l&apos;activer</span>
+              } · Ne constitue pas un avis juridique
             </p>
           </div>
         </div>
