@@ -42,11 +42,11 @@ export default function EmbedPage() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <Code2 size={20} style={{ color: "var(--primary)" }} />
-            <h1 className="text-2xl font-bold text-white">Intégration Widget</h1>
+            <h1 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>Intégration Widget</h1>
           </div>
-          <p className="text-slate-400 text-sm">
+          <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             Intégrez l&apos;agent de recherche juridique AVCA Legal sur votre site web (ex : avca-avocats.fr)
-            via une simple balise <code className="text-amber-300">&lt;iframe&gt;</code>.
+            via une simple balise <code style={{ color: "var(--primary)" }}>&lt;iframe&gt;</code>.
           </p>
         </div>
 
@@ -56,11 +56,11 @@ export default function EmbedPage() {
             className="rounded-xl p-5 border"
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
-            <h2 className="text-sm font-semibold text-slate-200 mb-4">Paramètres</h2>
+            <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--foreground)" }}>Paramètres</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Clé API</label>
+                <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Clé API</label>
                 <input
                   type="text"
                   value={apiKey}
@@ -72,13 +72,13 @@ export default function EmbedPage() {
                     color: "var(--foreground)",
                   }}
                 />
-                <p className="text-xs text-slate-600 mt-1">
+                <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
                   La clé par défaut permet un accès public depuis avca-avocats.fr.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Thème</label>
+                <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Thème</label>
                 <div className="flex gap-2">
                   {(["dark", "light"] as const).map(t => (
                     <button
@@ -99,7 +99,7 @@ export default function EmbedPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-slate-500 mb-1">Largeur (px)</label>
+                  <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Largeur (px)</label>
                   <input
                     type="text"
                     value={width}
@@ -113,7 +113,7 @@ export default function EmbedPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-slate-500 mb-1">Hauteur (px)</label>
+                  <label className="block text-xs mb-1" style={{ color: "var(--muted-foreground)" }}>Hauteur (px)</label>
                   <input
                     type="text"
                     value={height}
@@ -147,7 +147,7 @@ export default function EmbedPage() {
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-slate-200">Code à intégrer</h2>
+              <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Code à intégrer</h2>
               <button
                 onClick={handleCopy}
                 className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors"
@@ -164,7 +164,7 @@ export default function EmbedPage() {
 
             <pre
               className="text-xs leading-relaxed overflow-auto rounded-lg p-3 font-mono"
-              style={{ backgroundColor: "rgba(0,0,0,0.3)", color: "#c8d6e8", maxHeight: "260px" }}
+              style={{ backgroundColor: "var(--muted)", color: "var(--foreground)", maxHeight: "260px" }}
             >
               {iframeCode}
             </pre>
@@ -176,22 +176,22 @@ export default function EmbedPage() {
           className="mt-6 rounded-xl p-5 border"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
-          <h2 className="text-sm font-semibold text-slate-200 mb-3">Instructions pour avca-avocats.fr (Lovable.dev)</h2>
-          <ol className="space-y-2 text-sm text-slate-400">
+          <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--foreground)" }}>Instructions pour avca-avocats.fr (Webflow)</h2>
+          <ol className="space-y-2 text-sm" style={{ color: "var(--muted-foreground)" }}>
             <li className="flex gap-2">
-              <span className="text-amber-400 font-bold">1.</span>
+              <span className="font-bold" style={{ color: "var(--primary)" }}>1.</span>
               Dans l&apos;éditeur Lovable, ouvrez la page ou le composant où vous souhaitez intégrer le widget.
             </li>
             <li className="flex gap-2">
-              <span className="text-amber-400 font-bold">2.</span>
-              Ajoutez un composant HTML personnalisé et collez le code <code className="text-amber-300">&lt;iframe&gt;</code> ci-dessus.
+              <span className="font-bold" style={{ color: "var(--primary)" }}>2.</span>
+              Ajoutez un composant HTML personnalisé et collez le code <code style={{ color: "var(--primary)" }}>&lt;iframe&gt;</code> ci-dessus.
             </li>
             <li className="flex gap-2">
-              <span className="text-amber-400 font-bold">3.</span>
-              Ajustez la largeur à <code className="text-amber-300">100%</code> pour une mise en page responsive.
+              <span className="font-bold" style={{ color: "var(--primary)" }}>3.</span>
+              Ajustez la largeur à <code style={{ color: "var(--primary)" }}>100%</code> pour une mise en page responsive.
             </li>
             <li className="flex gap-2">
-              <span className="text-amber-400 font-bold">4.</span>
+              <span className="font-bold" style={{ color: "var(--primary)" }}>4.</span>
               Le widget fonctionnera automatiquement avec la clé API publique fournie.
             </li>
           </ol>
