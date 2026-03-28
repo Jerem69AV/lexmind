@@ -527,7 +527,7 @@ export default function AssistantPage() {
                 onClick={handleSend}
                 disabled={!inputValue.trim() || loading}
                 className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{ backgroundColor: "var(--sidebar)" }}
+                style={{ backgroundColor: "var(--primary)" }}
               >
                 {loading
                   ? <Loader2 size={16} className="animate-spin text-white" />
