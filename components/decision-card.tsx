@@ -56,7 +56,7 @@ export function DecisionCard({ decision, query = "", onBookmark, isBookmarked, c
             {decision.publication}
           </span>
           {(decision.score ?? 0) > 0 && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs bg-slate-700/50 text-slate-400 border border-slate-600">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs border" style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)", borderColor: "var(--border)" }}>
               Score: {Math.round((decision.score ?? 0) * 100)}%
             </span>
           )}
@@ -79,30 +79,30 @@ export function DecisionCard({ decision, query = "", onBookmark, isBookmarked, c
 
       {/* Title */}
       <Link href={`/research/${decision.id}`} className="block group/title">
-        <h3 className="text-sm font-semibold text-slate-100 leading-snug mb-2 group-hover/title:text-blue-300 transition-colors line-clamp-2">
+        <h3 className="text-sm font-semibold leading-snug mb-2 transition-colors line-clamp-2" style={{ color: "var(--foreground)" }}>
           {decision.title}
         </h3>
       </Link>
 
       {/* Meta info */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3 text-xs text-slate-500">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3 text-xs" style={{ color: "var(--muted-foreground)" }}>
         <span className="flex items-center gap-1">
           <Building2 size={11} />
           {decision.juridiction}
         </span>
-        <span className="text-slate-600">·</span>
+        <span>·</span>
         <span>{decision.chambre}</span>
-        <span className="text-slate-600">·</span>
+        <span>·</span>
         <span className="flex items-center gap-1">
           <Calendar size={11} />
           {formatDateShort(decision.date)}
         </span>
-        <span className="text-slate-600">·</span>
-        <span className="font-mono text-slate-600">{decision.ecli}</span>
+        <span>·</span>
+        <span className="font-mono">{decision.ecli}</span>
       </div>
 
       {/* Snippet */}
-      <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 mb-3">
+      <p className="text-xs leading-relaxed line-clamp-3 mb-3" style={{ color: "var(--muted-foreground)" }}>
         {query ? highlightText(decision.snippet, query) : decision.snippet}
       </p>
 
@@ -112,14 +112,14 @@ export function DecisionCard({ decision, query = "", onBookmark, isBookmarked, c
           {decision.themes.slice(0, 4).map(theme => (
             <span
               key={theme}
-              className="inline-block text-xs px-2 py-0.5 rounded-full text-slate-400 border"
-              style={{ backgroundColor: "rgba(51,65,85,0.5)", borderColor: "var(--border)" }}
+              className="inline-block text-xs px-2 py-0.5 rounded-full border"
+              style={{ backgroundColor: "var(--muted)", color: "var(--foreground)", borderColor: "var(--border)" }}
             >
               {theme}
             </span>
           ))}
           {decision.themes.length > 4 && (
-            <span className="inline-block text-xs px-2 py-0.5 rounded-full text-slate-500">
+            <span className="inline-block text-xs px-2 py-0.5 rounded-full" style={{ color: "var(--muted-foreground)" }}>
               +{decision.themes.length - 4}
             </span>
           )}
@@ -128,7 +128,7 @@ export function DecisionCard({ decision, query = "", onBookmark, isBookmarked, c
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "var(--border)" }}>
-        <span className="text-xs text-slate-600 font-mono">n° {decision.numero}</span>
+        <span className="text-xs font-mono" style={{ color: "var(--muted-foreground)" }}>n° {decision.numero}</span>
         <Link
           href={`/research/${decision.id}`}
           className="flex items-center gap-1.5 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
