@@ -3,64 +3,74 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Send, Loader2, MessageSquare, Plus, History, BookOpen,
-  AlertTriangle, ChevronDown, Trash2, Zap, Globe
+  AlertTriangle, ChevronDown, Trash2, Zap, ExternalLink, Scale
 } from "lucide-react";
-import { CitationPanel } from "@/components/citation-panel";
 import { cn, generateId } from "@/lib/utils";
-import type { ChatMessage, ChatSession, RAGResponse, RAGMode } from "@/types";
+import type { ChatMessage, ChatSession, RAGResponse, RAGMode, UsedDocument, WebSource } from "@/types";
 
-function CitationBadge({ index, onClick, active }: { index: number; onClick: () => void; active: boolean }) {
+// ── Badges de citation cliquables ──────────────────────────────────────────────
+
+function JurisBadge({ label, url }: { label: string; url: string }) {
   return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold align-super ml-0.5 transition-all",
-        active ? "text-white scale-110" : "hover:text-white hover:scale-105"
-      )}
-      style={{
-        backgroundColor: active ? "var(--primary)" : "rgba(59,130,246,0.25)",
-        color: active ? "white" : "#93c5fd",
-        fontSize: "10px",
-      }}
-      title={`Source [${index}]`}
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-bold align-super ml-0.5 transition-all hover:brightness-90"
+      style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#2563eb", fontSize: "10px", textDecoration: "none" }}
+      title={`Voir la jurisprudence ${label}`}
     >
-      {index}
-    </button>
+      {label} <ExternalLink size={8} />
+    </a>
   );
 }
 
-function renderContentWithCitations(
+function WebBadge({ label, url, hostname }: { label: string; url: string; hostname: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-bold align-super ml-0.5 transition-all hover:brightness-90"
+      style={{ backgroundColor: "rgba(16,185,129,0.12)", color: "#059669", fontSize: "10px", textDecoration: "none" }}
+      title={`Source : ${hostname}`}
+    >
+      {label} <ExternalLink size={8} />
+    </a>
+  );
+}
+
+function renderContent(
   content: string,
-  activeCitation: number | null,
-  onCitationClick: (i: number) => void
+  usedDocuments: UsedDocument[],
+  webSources: WebSource[]
 ): React.ReactNode {
-  const parts = content.split(/(\[\d+\])/g);
+  const parts = content.split(/(\[J\d+\]|\[W\d+\])/g);
   return parts.map((part, i) => {
-    const match = part.match(/^\[(\d+)\]$/);
-    if (match) {
-      const idx = parseInt(match[1]);
-      return (
-        <CitationBadge
-          key={i}
-          index={idx}
-          onClick={() => onCitationClick(idx)}
-          active={activeCitation === idx}
-        />
-      );
+    const jMatch = part.match(/^\[J(\d+)\]$/);
+    const wMatch = part.match(/^\[W(\d+)\]$/);
+    if (jMatch) {
+      const idx = parseInt(jMatch[1]) - 1;
+      const doc = usedDocuments[idx];
+      const url = doc
+        ? `https://www.legifrance.gouv.fr/search/juri?tab_selection=juri&searchField=ALL&query=${encodeURIComponent(doc.ecli || doc.title)}&page=1&pageSize=10`
+        : "#";
+      return <JurisBadge key={i} label={`J${jMatch[1]}`} url={url} />;
     }
-    return part;
+    if (wMatch) {
+      const idx = parseInt(wMatch[1]) - 1;
+      const src = webSources[idx];
+      return src
+        ? <WebBadge key={i} label={`W${wMatch[1]}`} url={src.url} hostname={src.hostname} />
+        : <span key={i} style={{ color: "var(--muted-foreground)", fontSize: "10px" }}>[W{wMatch[1]}]</span>;
+    }
+    return <span key={i}>{part}</span>;
   });
 }
 
-function AssistantMessage({
-  message,
-  onCitationClick,
-  activeCitation,
-}: {
-  message: ChatMessage;
-  onCitationClick: (index: number) => void;
-  activeCitation: number | null;
-}) {
+// ── Message assistant ──────────────────────────────────────────────────────────
+
+function AssistantMessage({ message }: { message: ChatMessage }) {
   const rag = message.rag_response;
   const [expanded, setExpanded] = useState(true);
 
@@ -77,7 +87,6 @@ function AssistantMessage({
     );
   }
 
-  // Simple assistant message (no RAG)
   if (!rag) {
     return (
       <div className="flex gap-3 mb-4">
@@ -95,8 +104,11 @@ function AssistantMessage({
     );
   }
 
+  const docs = rag.used_documents ?? [];
+  const webSrcs = rag.web_sources ?? [];
+
   return (
-    <div className="flex gap-3 mb-6 animate-fade-in">
+    <div className="flex gap-3 mb-6">
       <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-1"
         style={{ backgroundColor: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)" }}>
         <Zap size={13} style={{ color: "#818cf8" }} />
@@ -124,83 +136,97 @@ function AssistantMessage({
               >
                 Confiance {Math.round(rag.confidence * 100)}%
               </span>
-              <span
-                className="text-xs px-2 py-0.5 rounded-full capitalize"
-                style={{
-                  backgroundColor: "rgba(99,102,241,0.15)",
-                  color: "#6366f1",
-                  border: "1px solid rgba(99,102,241,0.2)",
-                }}
-              >
-                {rag.mode}
-              </span>
+              {webSrcs.length > 0 && (
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: "rgba(16,185,129,0.1)", color: "#059669", border: "1px solid rgba(16,185,129,0.2)" }}>
+                  {docs.length} arrêt{docs.length > 1 ? "s" : ""} · {webSrcs.length} source{webSrcs.length > 1 ? "s" : ""} web
+                </span>
+              )}
             </div>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>{rag.synthese}</p>
+          <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
+            {renderContent(rag.synthese, docs, webSrcs)}
+          </p>
         </div>
 
         {/* Sections */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs mb-2 transition-colors"
-          style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }}
-        >
-          <span>{rag.sections.length} section{rag.sections.length > 1 ? "s" : ""} développées</span>
-          <ChevronDown size={13} className={cn("transition-transform", !expanded && "-rotate-90")} />
-        </button>
+        {rag.sections.length > 0 && (
+          <>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs mb-2 transition-colors"
+              style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }}
+            >
+              <span>{rag.sections.length} section{rag.sections.length > 1 ? "s" : ""} développées</span>
+              <ChevronDown size={13} className={cn("transition-transform", !expanded && "-rotate-90")} />
+            </button>
 
-        {expanded && (
-          <div className="space-y-3">
-            {rag.sections.map((section, i) => (
-              <div
-                key={i}
-                className="rounded-xl px-5 py-4"
-                style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
-              >
-                <h4 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
-                  <span
-                    className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#3b82f6" }}
+            {expanded && (
+              <div className="space-y-3">
+                {rag.sections.map((section, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl px-5 py-4"
+                    style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
                   >
-                    {i + 1}
-                  </span>
-                  {section.title}
-                </h4>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-                  {renderContentWithCitations(section.content, activeCitation, onCitationClick)}
-                </p>
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
+                      <span
+                        className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center flex-shrink-0"
+                        style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#3b82f6" }}
+                      >
+                        {i + 1}
+                      </span>
+                      {section.title}
+                    </h4>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
+                      {renderContent(section.content, docs, webSrcs)}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+          </>
+        )}
+
+        {/* Note de cohérence des sources */}
+        {rag.disclaimer && (
+          <div
+            className="mt-3 flex items-start gap-2 px-4 py-2.5 rounded-lg text-xs"
+            style={{ backgroundColor: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.2)", color: "var(--muted-foreground)" }}
+          >
+            <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" style={{ color: "#d97706" }} />
+            <span>{rag.disclaimer}</span>
           </div>
         )}
 
-        {/* Disclaimer + CTA cabinet */}
+        {/* Disclaimer légal + CTA cabinet */}
         <div
           className="mt-3 rounded-xl overflow-hidden text-xs"
           style={{ border: "1px solid var(--border)" }}
         >
-          {/* Avertissement */}
           <div
-            className="flex items-start gap-2 px-4 py-2.5"
-            style={{ backgroundColor: "rgba(245,158,11,0.06)", borderBottom: "1px solid rgba(245,158,11,0.15)", color: "var(--muted-foreground)" }}
+            className="flex items-start gap-2 px-4 py-3"
+            style={{ backgroundColor: "rgba(245,158,11,0.05)", borderBottom: "1px solid rgba(245,158,11,0.12)", color: "var(--muted-foreground)" }}
           >
             <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" style={{ color: "#d97706" }} />
-            <span>Cette réponse est <strong>purement informative</strong> et ne constitue pas un conseil juridique au sens de la loi du 31 décembre 1971. Les informations fournies ne sauraient remplacer l'avis d'un avocat et ne peuvent être utilisées comme fondement d'une décision juridique sans vérification préalable.</span>
+            <span>
+              Cette réponse est <strong>purement informative</strong> et ne constitue pas un conseil juridique au sens de la loi n° 71-1130 du 31 décembre 1971.
+              Les informations fournies ne remplacent pas l'avis d'un avocat et ne peuvent être utilisées comme fondement d'une décision juridique sans vérification préalable.
+            </span>
           </div>
-          {/* CTA cabinet */}
           <div
-            className="flex items-center justify-between px-4 py-3 gap-4"
+            className="flex items-center justify-between px-4 py-3 gap-4 flex-wrap"
             style={{ backgroundColor: "var(--card)" }}
           >
-            <p style={{ color: "var(--foreground)" }}>
-              Votre question nécessite l'intervention d'un avocat ou vous souhaitez confier votre dossier au cabinet ?
-            </p>
+            <div className="flex items-center gap-2" style={{ color: "var(--foreground)" }}>
+              <Scale size={13} style={{ color: "var(--primary)", flexShrink: 0 }} />
+              <span>Votre question nécessite l&apos;intervention d&apos;un avocat ou vous souhaitez confier votre dossier au cabinet AVCA Legal ?</span>
+            </div>
             <a
               href="mailto:contact@avca-avocats.fr?subject=Demande de consultation — AVCA Legal"
-              className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium transition-all hover:brightness-110"
+              className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-semibold transition-all hover:brightness-110"
               style={{ backgroundColor: "var(--sidebar)" }}
             >
-              Contacter le cabinet
+              Contacter le cabinet →
             </a>
           </div>
         </div>
@@ -208,6 +234,8 @@ function AssistantMessage({
     </div>
   );
 }
+
+// ── Session dans la sidebar ────────────────────────────────────────────────────
 
 function SessionItem({ session, active, onSelect, onDelete }: {
   session: ChatSession;
@@ -217,14 +245,8 @@ function SessionItem({ session, active, onSelect, onDelete }: {
 }) {
   return (
     <div
-      className={cn(
-        "group flex items-start gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-        active ? "" : "hover:bg-white/5"
-      )}
-      style={active
-        ? { backgroundColor: "rgba(201,162,39,0.1)", color: "var(--primary)" }
-        : { color: "var(--muted-foreground)" }
-      }
+      className={cn("group flex items-start gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors", !active && "hover:bg-white/5")}
+      style={active ? { backgroundColor: "rgba(201,162,39,0.1)", color: "var(--primary)" } : { color: "var(--muted-foreground)" }}
       onClick={onSelect}
     >
       <MessageSquare size={13} className="flex-shrink-0 mt-0.5" />
@@ -246,12 +268,14 @@ function SessionItem({ session, active, onSelect, onDelete }: {
 const WELCOME_MESSAGE = `Bonjour ! Je suis l'assistant juridique IA d'AVCA Legal.
 
 Je peux vous aider à :
-- **Analyser la jurisprudence** sur un sujet précis
-- **Synthétiser les positions** de la Cour de cassation ou du Conseil d'État
-- **Identifier les décisions clés** et les tendances jurisprudentielles
-- **Répondre à vos questions** de droit en citant mes sources
+- Analyser la jurisprudence sur un sujet précis
+- Synthétiser les positions de la Cour de cassation ou du Conseil d'État
+- Identifier les décisions clés et les tendances jurisprudentielles
+- Répondre à vos questions de droit en citant mes sources
 
-Posez votre question et je vous fournirai une réponse structurée avec des citations vérifiables.`;
+Chaque réponse croise jurisprudences officielles (Judilibre) et sources web françaises. Les annotations [J1], [W1]... sont des liens cliquables vers les sources.`;
+
+// ── Page principale ────────────────────────────────────────────────────────────
 
 export default function AssistantPage() {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
@@ -259,10 +283,7 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<RAGMode>("strict");
-  const [webSearch, setWebSearch] = useState(false);
-  const [activeCitation, setActiveCitation] = useState<number | null>(null);
-  const [currentRAG, setCurrentRAG] = useState<RAGResponse | null>(null);
+  const [mode] = useState<RAGMode>("strict");
   const [showHistory, setShowHistory] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -287,8 +308,6 @@ export default function AssistantPage() {
     setSessions(prev => [newSession, ...prev]);
     setActiveSessionId(id);
     setMessages([]);
-    setCurrentRAG(null);
-    setActiveCitation(null);
   }, [mode]);
 
   useEffect(() => {
@@ -300,7 +319,6 @@ export default function AssistantPage() {
     if (!question || loading) return;
 
     setInputValue("");
-    setActiveCitation(null);
 
     const userMsg: ChatMessage = {
       id: generateId(),
@@ -316,13 +334,11 @@ export default function AssistantPage() {
       const res = await fetch("/api/rag/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, mode, web_search: webSearch }),
+        body: JSON.stringify({ question, mode, web_search: true }),
       });
 
       if (!res.ok) throw new Error("Erreur du serveur");
-
       const data: RAGResponse = await res.json();
-      setCurrentRAG(data);
 
       const assistantMsg: ChatMessage = {
         id: generateId(),
@@ -334,8 +350,7 @@ export default function AssistantPage() {
 
       setMessages(prev => {
         const updated = [...prev, assistantMsg];
-        // Update session title from first question
-        if (sessions.length > 0 && activeSessionId) {
+        if (activeSessionId) {
           setSessions(s => s.map(sess =>
             sess.id === activeSessionId
               ? { ...sess, title: question.substring(0, 50), messages: updated, updated_at: new Date().toISOString() }
@@ -346,48 +361,34 @@ export default function AssistantPage() {
       });
     } catch (e) {
       console.error(e);
-      const errMsg: ChatMessage = {
+      setMessages(prev => [...prev, {
         id: generateId(),
         role: "assistant",
-        content: "Désolé, une erreur est survenue lors du traitement de votre question. Veuillez réessayer.",
+        content: "Désolé, une erreur est survenue. Veuillez réessayer.",
         timestamp: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, errMsg]);
+      }]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
-
-  const handleCitationClick = (index: number) => {
-    setActiveCitation(prev => prev === index ? null : index);
-  };
-
-  const usedDocs = currentRAG?.used_documents ?? [];
-  const lastAssistantMsg = [...messages].reverse().find(m => m.role === "assistant" && m.rag_response);
 
   return (
     <div className="flex-1 flex overflow-hidden" style={{ height: "calc(100vh - 130px)" }}>
-      {/* History Sidebar */}
+
+      {/* Sidebar historique */}
       {showHistory && (
-        <aside
-          className="w-56 flex-shrink-0 flex flex-col border-r"
-          style={{ backgroundColor: "var(--sidebar)", borderColor: "var(--border)" }}
-        >
+        <aside className="w-56 flex-shrink-0 flex flex-col border-r" style={{ backgroundColor: "var(--sidebar)", borderColor: "var(--border)" }}>
           <div className="p-3 border-b" style={{ borderColor: "var(--border)" }}>
             <button
               onClick={startNewSession}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-white transition-all hover:brightness-110"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-white hover:brightness-110 transition-all"
               style={{ backgroundColor: "var(--primary)" }}
             >
-              <Plus size={14} />
-              Nouvelle conversation
+              <Plus size={14} /> Nouvelle conversation
             </button>
           </div>
 
@@ -395,27 +396,18 @@ export default function AssistantPage() {
             <p className="text-xs px-3 py-1.5 uppercase tracking-wide font-medium" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>
               Historique
             </p>
-            {sessions.length === 0 ? (
-              <p className="text-xs px-3 py-2" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>Aucune conversation</p>
-            ) : (
-              sessions.map(session => (
+            {sessions.length === 0
+              ? <p className="text-xs px-3 py-2" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>Aucune conversation</p>
+              : sessions.map(session => (
                 <SessionItem
                   key={session.id}
                   session={session}
                   active={session.id === activeSessionId}
-                  onSelect={() => {
-                    setActiveSessionId(session.id);
-                    setMessages(session.messages);
-                    const lastRag = [...session.messages].reverse().find(m => m.rag_response)?.rag_response;
-                    setCurrentRAG(lastRag ?? null);
-                  }}
-                  onDelete={() => {
-                    setSessions(prev => prev.filter(s => s.id !== session.id));
-                    if (session.id === activeSessionId) startNewSession();
-                  }}
+                  onSelect={() => { setActiveSessionId(session.id); setMessages(session.messages); }}
+                  onDelete={() => { setSessions(prev => prev.filter(s => s.id !== session.id)); if (session.id === activeSessionId) startNewSession(); }}
                 />
               ))
-            )}
+            }
           </div>
 
           <div className="p-3 border-t" style={{ borderColor: "var(--border)" }}>
@@ -424,13 +416,10 @@ export default function AssistantPage() {
         </aside>
       )}
 
-      {/* Main chat area */}
+      {/* Zone principale */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Chat header */}
-        <div
-          className="flex items-center justify-between px-5 py-3 border-b flex-shrink-0"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-        >
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b flex-shrink-0" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowHistory(!showHistory)}
@@ -443,50 +432,34 @@ export default function AssistantPage() {
               Assistant Juridique IA AVCA Legal
             </h2>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setWebSearch(v => !v)}
-              title={webSearch ? "Recherche web activée — cliquer pour désactiver" : "Activer la recherche web (Tavily + Judilibre)"}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-              style={webSearch
-                ? { backgroundColor: "var(--primary)", color: "white" }
-                : { backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }
-              }
-            >
-              <Globe size={13} />
-              Recherche web
-            </button>
+          <div className="flex items-center gap-2 text-xs" style={{ color: "var(--muted-foreground)" }}>
+            <span className="px-2 py-1 rounded-full" style={{ backgroundColor: "rgba(16,185,129,0.1)", color: "#059669", border: "1px solid rgba(16,185,129,0.2)" }}>
+              Judilibre + Web officiel
+            </span>
           </div>
         </div>
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-5 py-6">
-          {/* Welcome */}
           {messages.length === 0 && (
             <div className="max-w-2xl mx-auto">
-              <div
-                className="rounded-2xl p-6 mb-8 text-center"
-                style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
-              >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
-                  style={{ backgroundColor: "rgba(99,102,241,0.15)" }}
-                >
+              <div className="rounded-2xl p-6 mb-8 text-center" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "rgba(99,102,241,0.15)" }}>
                   <Zap size={24} style={{ color: "#6366f1" }} />
                 </div>
                 <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Assistant juridique IA</h3>
                 <div className="text-sm text-left space-y-2 mt-4" style={{ color: "var(--foreground)" }}>
-                  {WELCOME_MESSAGE.split("\n").filter(Boolean).map((line, i) => (
-                    <p key={i}>{line.replace(/\*\*([^*]+)\*\*/g, "$1")}</p>
-                  ))}
+                  {WELCOME_MESSAGE.split("\n").filter(Boolean).map((line, i) => <p key={i}>{line}</p>)}
+                </div>
+                <div className="flex items-center justify-center gap-4 mt-5 text-xs" style={{ color: "var(--muted-foreground)" }}>
+                  <span className="flex items-center gap-1"><span style={{ color: "#2563eb", fontWeight: 700 }}>[J1]</span> Jurisprudence Judilibre</span>
+                  <span className="flex items-center gap-1"><span style={{ color: "#059669", fontWeight: 700 }}>[W1]</span> Source web officielle</span>
                 </div>
               </div>
 
-              {/* Suggested questions */}
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  "Quelle est la jurisprudence sur le devoir de mise en garde des banques ?",
+                  "Quels sont les critères du trouble anormal de voisinage ?",
                   "Comment la Cour de cassation apprécie-t-elle le harcèlement moral ?",
                   "Quelles sont les conditions de la rupture brutale de relations commerciales ?",
                   "Quels sont les critères de la prestation compensatoire après divorce ?",
@@ -497,63 +470,41 @@ export default function AssistantPage() {
                     className="text-left px-4 py-3 rounded-xl text-sm border transition-all hover:border-blue-400"
                     style={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }}
                   >
-                    <span className="line-clamp-2">{q}</span>
+                    {q}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Chat messages */}
           <div className="max-w-3xl mx-auto">
-            {messages.map(msg => (
-              <AssistantMessage
-                key={msg.id}
-                message={msg}
-                onCitationClick={handleCitationClick}
-                activeCitation={activeCitation}
-              />
-            ))}
+            {messages.map(msg => <AssistantMessage key={msg.id} message={msg} />)}
 
-            {/* Typing indicator */}
             {loading && (
               <div className="flex gap-3 mb-4">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)" }}>
+                <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)" }}>
                   <Zap size={13} style={{ color: "#6366f1" }} />
                 </div>
-                <div
-                  className="px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-3"
-                  style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
-                >
+                <div className="px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-3" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
                   <Loader2 size={15} className="animate-spin text-blue-500" />
-                  <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-                    {webSearch ? "Recherche web + jurisprudence en cours..." : "Analyse de la jurisprudence en cours..."}
-                  </span>
+                  <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>Recherche Judilibre + sources web en cours...</span>
                 </div>
               </div>
             )}
-
             <div ref={messagesEndRef} />
           </div>
         </div>
 
-        {/* Input area */}
-        <div
-          className="flex-shrink-0 px-5 py-4 border-t"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-        >
+        {/* Zone de saisie */}
+        <div className="flex-shrink-0 px-5 py-4 border-t" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
           <div className="max-w-3xl mx-auto">
-            <div
-              className="flex gap-3 items-end rounded-xl p-3 transition-all"
-              style={{ backgroundColor: "var(--input)", border: "1px solid var(--border)" }}
-            >
+            <div className="flex gap-3 items-end rounded-xl p-3 transition-all" style={{ backgroundColor: "var(--input)", border: "1px solid var(--border)" }}>
               <textarea
                 ref={textareaRef}
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Posez votre question juridique... (Entrée pour envoyer, Maj+Entrée pour sauter une ligne)"
+                placeholder="Posez votre question juridique... (Entrée pour envoyer)"
                 rows={2}
                 className="flex-1 bg-transparent text-sm resize-none focus:outline-none leading-relaxed"
                 style={{ color: "var(--foreground)", maxHeight: "120px" }}
@@ -565,34 +516,15 @@ export default function AssistantPage() {
                 className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{ backgroundColor: "#a8841f" }}
               >
-                {loading
-                  ? <Loader2 size={16} className="animate-spin text-white" />
-                  : <Send size={16} className="text-white" />
-                }
+                {loading ? <Loader2 size={16} className="animate-spin text-white" /> : <Send size={16} className="text-white" />}
               </button>
             </div>
             <p className="text-xs mt-2 text-center" style={{ color: "var(--muted-foreground)" }}>
-              Mode <strong>{mode}</strong> · Sources citées · Ne constitue pas un avis juridique
+              Sources croisées · Judilibre + web officiel français · Ne constitue pas un avis juridique
             </p>
           </div>
         </div>
       </div>
-
-      {/* Citation panel */}
-      {usedDocs.length > 0 && (
-        <aside
-          className="w-72 flex-shrink-0 border-l overflow-y-auto px-4 py-5"
-          style={{ backgroundColor: "var(--sidebar)", borderColor: "var(--border)" }}
-        >
-          {lastAssistantMsg?.rag_response && (
-            <CitationPanel
-              documents={usedDocs}
-              activeIndex={activeCitation ?? undefined}
-              onCitationClick={handleCitationClick}
-            />
-          )}
-        </aside>
-      )}
     </div>
   );
 }

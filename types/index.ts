@@ -127,6 +127,14 @@ export interface RAGRequest {
   filters?: SearchFilters;
 }
 
+export interface WebSource {
+  index: number;
+  url: string;
+  title: string;
+  hostname: string;
+  score: number;
+}
+
 export interface RAGResponse {
   question: string;
   mode: RAGMode;
@@ -134,6 +142,7 @@ export interface RAGResponse {
   sections: RAGSection[];
   used_documents: UsedDocument[];
   citations: Citation[];
+  web_sources?: WebSource[];
   confidence: number; // 0-1
   disclaimer: string;
   response_time_ms: number;
