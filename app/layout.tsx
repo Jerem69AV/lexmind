@@ -61,26 +61,26 @@ export default function RootLayout({
               className="border-t py-6 mt-auto"
               style={{ borderColor: "var(--border)", backgroundColor: "var(--sidebar)" }}
             >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
                 <p>
                   © {new Date().getFullYear()} AVCA Legal. Données issues de{" "}
                   <a
                     href="https://www.judilibre.io"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-slate-200 underline"
+                    className="underline" style={{ color: "rgba(255,255,255,0.7)" }}
                   >
                     Judilibre
                   </a>{" "}
                   et Légifrance.
                 </p>
                 <div className="flex items-center gap-4">
-                  <Link href="/rgpd" className="flex items-center gap-1.5 hover:text-slate-300 transition-colors">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  <Link href="/rgpd" className="flex items-center gap-1.5 transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"></span>
                     Conformité RGPD
                   </Link>
-                  <Link href="/mentions-legales" className="hover:text-slate-300 transition-colors">Mentions légales</Link>
-                  <Link href="/cgu" className="hover:text-slate-300 transition-colors">CGU</Link>
+                  <Link href="/mentions-legales" className="transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>Mentions légales</Link>
+                  <Link href="/cgu" className="transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>CGU</Link>
                 </div>
               </div>
             </footer>
