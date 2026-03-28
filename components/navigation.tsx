@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scale, Search, MessageSquare, LayoutDashboard, Menu, X, Moon, Sun, Code2, ArrowLeft } from "lucide-react";
+import { Scale, Search, MessageSquare, Menu, X, Moon, Sun, Code2, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/research", label: "Recherche", icon: Search },
   { href: "/assistant", label: "Assistant IA", icon: MessageSquare },
-  { href: "/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/embed", label: "Widget", icon: Code2 },
 ];
 
