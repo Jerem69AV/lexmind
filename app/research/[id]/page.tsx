@@ -120,7 +120,7 @@ export default function DecisionDetailPage() {
           {/* Back button + title */}
           <div className="flex items-start gap-3 mb-6">
             <button
-              onClick={() => router.back()}
+              onClick={() => window.history.length > 1 ? router.back() : router.push("/research")}
               className="flex-shrink-0 mt-1 p-1.5 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors"
             >
               <ArrowLeft size={18} />
