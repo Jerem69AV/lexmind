@@ -156,28 +156,33 @@ function extractString(val: unknown): string {
 
 /** Convertit une décision brute Judilibre en LegalDocument unifié */
 function rawToLegalDocument(raw: JudilibreRawDecision): LegalDocument {
-  const chamberLabel = CHAMBER_LABELS[raw.chamber?.toLowerCase()] ?? raw.chamber ?? "";
-  const pubLabels = (raw.publication ?? []).map(p => PUBLICATION_LABELS[p] ?? p);
-  const solutionLabel = SOLUTION_LABELS[raw.solution?.toLowerCase() ?? ""] ?? raw.solution ?? "";
+  // resolve_references:true peut retourner n'importe quel champ sous forme {title:string}
+  const chamberRaw = extractString(raw.chamber);
+  const chamberLabel = CHAMBER_LABELS[chamberRaw?.toLowerCase()] ?? chamberRaw ?? "";
+  const solutionRaw = extractString(raw.solution);
+  const solutionLabel = SOLUTION_LABELS[solutionRaw?.toLowerCase() ?? ""] ?? solutionRaw ?? "";
+  const pubLabels = (raw.publication ?? []).map(p => {
+    const s = extractString(p);
+    return PUBLICATION_LABELS[s] ?? s;
+  });
 
   return {
-    id: raw.id,
-    ecli: raw.ecli ?? `ECLI:FR:CCASS:${raw.decision_date?.slice(0, 4)}:${raw.id}`,
+    id: String(raw.id ?? ""),
+    ecli: extractString(raw.ecli) || `ECLI:FR:CCASS:${raw.decision_date?.slice(0, 4)}:${raw.id}`,
     title: `Cour de cassation — ${chamberLabel}`,
     juridiction: "Cour de cassation",
     chambre: chamberLabel as LegalDocument["chambre"],
-    numero: (raw.numbers ?? [raw.number]).join("; "),
-    date: raw.decision_date,
+    numero: (raw.numbers ?? [raw.number]).map(extractString).join("; "),
+    date: extractString(raw.decision_date) || raw.decision_date,
     solution: (solutionLabel || "Rejet") as LegalDocument["solution"],
     publication: (pubLabels[0] || "Inédit") as LegalDocument["publication"],
-    sommaire: raw.summary ?? "",
-    texte: raw.text ?? "",
-    // resolve_references: true peut retourner string[] ou {title:string}[]
+    sommaire: extractString(raw.summary) || "",
+    texte: extractString(raw.text) || "",
     visa: (raw.visa ?? []).map(extractString).filter(Boolean),
     renvois: (raw.rapprochements ?? []).map(r => ({
       type: "citation" as const,
       texte: extractString(r.title),
-      id: r.id,
+      id: r.id ? String(r.id) : undefined,
     })),
     themes: (raw.themes ?? []).map(extractString).filter(Boolean),
     source: "judilibre",
