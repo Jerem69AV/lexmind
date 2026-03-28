@@ -72,12 +72,12 @@ export default function RootLayout({
                   et Légifrance.
                 </p>
                 <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1.5">
+                  <Link href="/rgpd" className="flex items-center gap-1.5 hover:text-slate-300 transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                    Conforme RGPD
-                  </span>
-                  <span>Mentions légales</span>
-                  <span>CGU</span>
+                    Conformité RGPD
+                  </Link>
+                  <Link href="/mentions-legales" className="hover:text-slate-300 transition-colors">Mentions légales</Link>
+                  <Link href="/cgu" className="hover:text-slate-300 transition-colors">CGU</Link>
                 </div>
               </div>
             </footer>
