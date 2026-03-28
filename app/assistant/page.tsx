@@ -460,14 +460,12 @@ export default function AssistantPage() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3">
                 {[
                   "Quelles sont les étapes d'une procédure de redressement judiciaire ?",
-                  "Quels sont les recours en cas de rupture brutale de relations commerciales établies ?",
-                  "Quel est le cadre juridique applicable aux tokens et crypto-actifs sous MiCA ?",
+                  "Quels sont les recours en cas de rupture brutale de relations commerciales ?",
+                  "Quel est le cadre juridique applicable aux crypto-actifs sous MiCA ?",
                   "Quelles sont les responsabilités du dirigeant en cas de liquidation judiciaire ?",
-                  "Comment caractériser un abus de biens sociaux en droit pénal des affaires ?",
-                  "Quelles garanties le banquier peut-il exiger dans un financement structuré ?",
                 ].map((q, i) => (
                   <button
                     key={i}
