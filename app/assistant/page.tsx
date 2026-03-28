@@ -265,15 +265,17 @@ function SessionItem({ session, active, onSelect, onDelete }: {
   );
 }
 
-const WELCOME_MESSAGE = `Bonjour ! Je suis l'assistant juridique IA d'AVCA Legal.
+const WELCOME_MESSAGE = `Bienvenue sur l'agent de recherche juridique du cabinet AVCA Legal.
 
-Je peux vous aider à :
-- Analyser la jurisprudence sur un sujet précis
-- Synthétiser les positions de la Cour de cassation ou du Conseil d'État
-- Identifier les décisions clés et les tendances jurisprudentielles
-- Répondre à vos questions de droit en citant mes sources
+Cet outil interroge en temps réel deux sources officielles :
+- La base Judilibre (Cour de cassation) pour les arrêts et décisions
+- Les sites juridiques publics français (Légifrance, service-public.fr, Conseil d'État…)
 
-Chaque réponse croise jurisprudences officielles (Judilibre) et sources web françaises. Les annotations [J1], [W1]... sont des liens cliquables vers les sources.`;
+À partir de votre question, l'agent rédige une note structurée, vérifie la cohérence entre les sources et vous indique le niveau de fiabilité de chaque information.
+
+Les renvois [J1], [J2]… pointent vers les arrêts Judilibre. Les renvois [W1], [W2]… pointent vers les sources web consultées. Cliquez dessus pour accéder directement à la source.
+
+Cette réponse est informative. Pour toute question nécessitant l'intervention d'un avocat, le cabinet reste disponible.`;
 
 // ── Page principale ────────────────────────────────────────────────────────────
 
@@ -459,10 +461,10 @@ export default function AssistantPage() {
 
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  "Quels sont les critères du trouble anormal de voisinage ?",
-                  "Comment la Cour de cassation apprécie-t-elle le harcèlement moral ?",
-                  "Quelles sont les conditions de la rupture brutale de relations commerciales ?",
-                  "Quels sont les critères de la prestation compensatoire après divorce ?",
+                  "Quelles sont les conditions du trouble anormal de voisinage ?",
+                  "Quelles sont les règles applicables en matière de responsabilité bancaire ?",
+                  "Comment s'ouvre une procédure de redressement judiciaire ?",
+                  "Quel est le régime juridique des cryptoactifs en droit français ?",
                 ].map((q, i) => (
                   <button
                     key={i}
