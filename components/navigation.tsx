@@ -8,7 +8,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/research", label: "Recherche", icon: Search },
+  { href: "/research", label: "Recherche Jurisprudence", icon: Search },
   { href: "/assistant", label: "Assistant IA", icon: MessageSquare },
   { href: "/embed", label: "Widget", icon: Code2 },
 ];
