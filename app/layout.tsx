@@ -75,12 +75,12 @@ export default function RootLayout({
                   et Légifrance.
                 </p>
                 <div className="flex items-center gap-4">
-                  <Link href="/rgpd" className="flex items-center gap-1.5 transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>
+                  <Link href="/rgpd" className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0"></span>
                     Conformité RGPD
                   </Link>
-                  <Link href="/mentions-legales" className="transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>Mentions légales</Link>
-                  <Link href="/cgu" className="transition-colors" style={{ color: "rgba(255,255,255,0.6)" }} onMouseOver={e => (e.currentTarget.style.color="rgba(255,255,255,1)")} onMouseOut={e => (e.currentTarget.style.color="rgba(255,255,255,0.6)")}>CGU</Link>
+                  <Link href="/mentions-legales" className="text-white/60 hover:text-white transition-colors">Mentions légales</Link>
+                  <Link href="/cgu" className="text-white/60 hover:text-white transition-colors">CGU</Link>
                 </div>
               </div>
             </footer>

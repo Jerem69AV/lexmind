@@ -281,7 +281,7 @@ export default function HomePage() {
           <p className="mb-8" style={{ color: "var(--muted-foreground)" }}>
             Accédez immédiatement à la base de jurisprudence française.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center">
             <Link
               href="/research"
               className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-white hover:brightness-110 transition-all"
@@ -289,13 +289,6 @@ export default function HomePage() {
             >
               Rechercher la jurisprudence
               <ArrowRight size={16} />
-            </Link>
-            <Link
-              href="/research"
-              className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold border transition-colors"
-              style={{ borderColor: "var(--border)", backgroundColor: "var(--card)", color: "var(--foreground)" }}
-            >
-              Essayer sans compte
             </Link>
           </div>
         </div>
