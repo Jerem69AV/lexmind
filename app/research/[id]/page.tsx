@@ -55,7 +55,12 @@ export default function DecisionDetailPage() {
         const res = await fetch(`/api/documents/${encodeURIComponent(id)}`);
         if (!res.ok) throw new Error("Document non trouvé");
         const data = await res.json();
-        setDoc(data);
+        // Normaliser visa/themes si retournés comme {title:string}[] (cache CDN)
+        const toStrArr = (arr: unknown[]) =>
+          (arr ?? []).map((v: unknown) =>
+            typeof v === "string" ? v : ((v as Record<string, unknown>)?.title ?? "")
+          ).filter(Boolean) as string[];
+        setDoc({ ...data, visa: toStrArr(data.visa), themes: toStrArr(data.themes) });
       } catch (e) {
         setError((e as Error).message);
       } finally {

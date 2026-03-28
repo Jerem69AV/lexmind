@@ -23,7 +23,7 @@ export async function GET(
       { ...document, similar_decisions: similar },
       {
         headers: {
-          "Cache-Control": "public, max-age=3600",
+          "Cache-Control": "no-store",
           "X-Data-Source": document.source,
         },
       }
