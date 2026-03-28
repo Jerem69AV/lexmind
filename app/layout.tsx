@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Providers } from "@/components/providers";
 import { Navigation } from "@/components/navigation";
 import { ConditionalFooter } from "@/components/conditional-footer";
+import { CguBanner } from "@/components/cgu-banner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,6 +53,7 @@ export default function RootLayout({
         style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
       >
         <Providers>
+          <CguBanner />
           <Navigation />
           <main className="flex-1 flex flex-col">{children}</main>
           <ConditionalFooter>
