@@ -15,7 +15,7 @@ const CHAMBRES = [
 function WidgetContent() {
   const searchParams = useSearchParams();
   const apiKey = searchParams.get("key");
-  const theme = searchParams.get("theme") ?? "dark";
+  const theme = searchParams.get("theme") ?? "light";
 
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
