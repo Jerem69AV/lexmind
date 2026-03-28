@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Send, Loader2, MessageSquare, Plus, History, BookOpen,
-  AlertTriangle, ChevronDown, Trash2, Settings, Zap
+  AlertTriangle, ChevronDown, Trash2, Zap, Globe
 } from "lucide-react";
 import { CitationPanel } from "@/components/citation-panel";
 import { cn, generateId } from "@/lib/utils";
@@ -238,6 +238,7 @@ export default function AssistantPage() {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<RAGMode>("strict");
+  const [webSearch, setWebSearch] = useState(false);
   const [activeCitation, setActiveCitation] = useState<number | null>(null);
   const [currentRAG, setCurrentRAG] = useState<RAGResponse | null>(null);
   const [showHistory, setShowHistory] = useState(true);
@@ -293,7 +294,7 @@ export default function AssistantPage() {
       const res = await fetch("/api/rag/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, mode }),
+        body: JSON.stringify({ question, mode, web_search: webSearch }),
       });
 
       if (!res.ok) throw new Error("Erreur du serveur");
@@ -421,7 +422,19 @@ export default function AssistantPage() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setWebSearch(v => !v)}
+              title={webSearch ? "Recherche web activée — cliquer pour désactiver" : "Activer la recherche web (Tavily + Judilibre)"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={webSearch
+                ? { backgroundColor: "var(--primary)", color: "white" }
+                : { backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }
+              }
+            >
+              <Globe size={13} />
+              Recherche web
+            </button>
           </div>
         </div>
 
@@ -492,7 +505,9 @@ export default function AssistantPage() {
                   style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
                 >
                   <Loader2 size={15} className="animate-spin text-blue-500" />
-                  <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>Analyse de la jurisprudence en cours...</span>
+                  <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+                    {webSearch ? "Recherche web + jurisprudence en cours..." : "Analyse de la jurisprudence en cours..."}
+                  </span>
                 </div>
               </div>
             )}
