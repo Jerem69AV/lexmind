@@ -205,7 +205,7 @@ Génère 2 à 4 sections. La confidence reflète la qualité et cohérence des s
       used_documents: usedDocuments,
       citations,
       confidence: Math.min(0.95, Math.max(0.3, parsed.confidence ?? 0.7)),
-      disclaimer: `Cette réponse est générée à partir de décisions jurisprudentielles officielles (Judilibre)${web_search ? " et de sources web officielles françaises" : ""}. Elle ne constitue pas un avis juridique.${webSourcesList}${coherenceNote}`,
+      disclaimer: `Sources : Judilibre (Cour de cassation)${web_search ? ` + sources web officielles (${webResults.map(r => new URL(r.url).hostname).filter((v, i, a) => a.indexOf(v) === i).join(", ")})` : ""}.${coherenceNote}`,
       response_time_ms: Date.now() - start,
     };
 

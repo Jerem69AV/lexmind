@@ -174,13 +174,35 @@ function AssistantMessage({
           </div>
         )}
 
-        {/* Disclaimer */}
+        {/* Disclaimer + CTA cabinet */}
         <div
-          className="mt-3 flex items-start gap-2 px-4 py-2.5 rounded-lg text-xs"
-          style={{ backgroundColor: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", color: "var(--muted-foreground)" }}
+          className="mt-3 rounded-xl overflow-hidden text-xs"
+          style={{ border: "1px solid var(--border)" }}
         >
-          <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" style={{ color: "#d97706" }} />
-          <span>{rag.disclaimer}</span>
+          {/* Avertissement */}
+          <div
+            className="flex items-start gap-2 px-4 py-2.5"
+            style={{ backgroundColor: "rgba(245,158,11,0.06)", borderBottom: "1px solid rgba(245,158,11,0.15)", color: "var(--muted-foreground)" }}
+          >
+            <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" style={{ color: "#d97706" }} />
+            <span>Cette réponse est <strong>purement informative</strong> et ne constitue pas un conseil juridique au sens de la loi du 31 décembre 1971. Les informations fournies ne sauraient remplacer l'avis d'un avocat et ne peuvent être utilisées comme fondement d'une décision juridique sans vérification préalable.</span>
+          </div>
+          {/* CTA cabinet */}
+          <div
+            className="flex items-center justify-between px-4 py-3 gap-4"
+            style={{ backgroundColor: "var(--card)" }}
+          >
+            <p style={{ color: "var(--foreground)" }}>
+              Votre question nécessite l'intervention d'un avocat ou vous souhaitez confier votre dossier au cabinet ?
+            </p>
+            <a
+              href="mailto:contact@avca-avocats.fr?subject=Demande de consultation — AVCA Legal"
+              className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium transition-all hover:brightness-110"
+              style={{ backgroundColor: "var(--sidebar)" }}
+            >
+              Contacter le cabinet
+            </a>
+          </div>
         </div>
       </div>
     </div>
