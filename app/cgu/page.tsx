@@ -12,7 +12,7 @@ export default function CguPage() {
         Conditions Générales d&apos;Utilisation
       </h1>
       <p className="text-sm mb-10" style={{ color: "var(--muted-foreground)" }}>
-        Version en vigueur au 1er janvier 2025
+        Version en vigueur au 28 mars 2026
       </p>
 
       <div className="space-y-10 text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>
@@ -118,13 +118,17 @@ export default function CguPage() {
           <p>
             Le traitement des données personnelles est effectué conformément au Règlement (UE) 2016/679 (RGPD) et à la loi n° 78-17 du 6 janvier 1978 modifiée.
           </p>
+          <p className="mt-3">
+            <strong>L'acceptation des présentes CGU vaut acceptation des conditions de traitement des données personnelles</strong> telles que détaillées dans notre{" "}
+            <a href="/rgpd" className="underline" style={{ color: "var(--primary)" }}>Politique de conformité RGPD</a>.
+          </p>
           <p className="mt-3"><strong>Données collectées :</strong></p>
           <ul className="mt-1 space-y-1 ml-4 list-disc" style={{ color: "var(--muted-foreground)" }}>
-            <li>Requêtes de recherche (conservées de manière anonymisée à des fins d'amélioration du Service) ;</li>
-            <li>Données de connexion techniques (logs serveur, adresse IP anonymisée).</li>
+            <li>Requêtes de recherche saisies (transmises à l'API Judilibre, non stockées par AVCA Legal) ;</li>
+            <li>Cookie de préférence d'affichage (thème clair/sombre), stocké localement dans le navigateur de l'utilisateur.</li>
           </ul>
           <p className="mt-3"><strong>Droits :</strong> Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et de portabilité. Exercice des droits : <a href="mailto:contact@avca-avocats.fr" className="underline" style={{ color: "var(--primary)" }}>contact@avca-avocats.fr</a>.</p>
-          <p className="mt-3">Vous disposez également du droit d'introduire une réclamation auprès de la <strong>CNIL</strong> (www.cnil.fr).</p>
+          <p className="mt-3">Vous disposez également du droit d'introduire une réclamation auprès de la <strong>CNIL</strong> : <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--primary)" }}>www.cnil.fr</a>.</p>
         </section>
 
         <section>

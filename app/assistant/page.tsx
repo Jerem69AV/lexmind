@@ -15,9 +15,13 @@ function CitationBadge({ index, onClick, active }: { index: number; onClick: () 
       onClick={onClick}
       className={cn(
         "inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold align-super ml-0.5 transition-all",
-        active ? "text-white scale-110" : "text-blue-300 hover:text-white hover:scale-105"
+        active ? "text-white scale-110" : "hover:text-white hover:scale-105"
       )}
-      style={{ backgroundColor: active ? "var(--primary)" : "rgba(59,130,246,0.25)", fontSize: "10px" }}
+      style={{
+        backgroundColor: active ? "var(--primary)" : "rgba(59,130,246,0.25)",
+        color: active ? "white" : "#93c5fd",
+        fontSize: "10px",
+      }}
       title={`Source [${index}]`}
     >
       {index}
@@ -82,8 +86,8 @@ function AssistantMessage({
           <Zap size={13} style={{ color: "#818cf8" }} />
         </div>
         <div
-          className="flex-1 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-slate-300"
-          style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
+          className="flex-1 rounded-2xl rounded-tl-sm px-4 py-3 text-sm"
+          style={{ color: "var(--foreground)", backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
         >
           {message.content}
         </div>
@@ -105,7 +109,7 @@ function AssistantMessage({
           style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5">
+            <span className="text-xs font-semibold uppercase tracking-wide flex items-center gap-1.5" style={{ color: "var(--muted-foreground)" }}>
               <BookOpen size={11} />
               Synthèse
             </span>
@@ -114,7 +118,7 @@ function AssistantMessage({
                 className="text-xs px-2 py-0.5 rounded-full font-medium"
                 style={{
                   backgroundColor: rag.confidence > 0.8 ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)",
-                  color: rag.confidence > 0.8 ? "#34d399" : "#fbbf24",
+                  color: rag.confidence > 0.8 ? "#059669" : "#d97706",
                   border: `1px solid ${rag.confidence > 0.8 ? "rgba(16,185,129,0.3)" : "rgba(245,158,11,0.3)"}`,
                 }}
               >
@@ -124,7 +128,7 @@ function AssistantMessage({
                 className="text-xs px-2 py-0.5 rounded-full capitalize"
                 style={{
                   backgroundColor: "rgba(99,102,241,0.15)",
-                  color: "#a5b4fc",
+                  color: "#6366f1",
                   border: "1px solid rgba(99,102,241,0.2)",
                 }}
               >
@@ -132,14 +136,14 @@ function AssistantMessage({
               </span>
             </div>
           </div>
-          <p className="text-sm text-slate-300 leading-relaxed">{rag.synthese}</p>
+          <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>{rag.synthese}</p>
         </div>
 
         {/* Sections */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs text-slate-500 hover:text-slate-300 mb-2 transition-colors"
-          style={{ backgroundColor: "rgba(30,41,59,0.4)" }}
+          className="w-full flex items-center justify-between px-4 py-2 rounded-lg text-xs mb-2 transition-colors"
+          style={{ backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }}
         >
           <span>{rag.sections.length} section{rag.sections.length > 1 ? "s" : ""} développées</span>
           <ChevronDown size={13} className={cn("transition-transform", !expanded && "-rotate-90")} />
@@ -153,16 +157,16 @@ function AssistantMessage({
                 className="rounded-xl px-5 py-4"
                 style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
               >
-                <h4 className="text-sm font-semibold text-slate-200 mb-2 flex items-center gap-2">
+                <h4 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: "var(--foreground)" }}>
                   <span
                     className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: "rgba(59,130,246,0.2)", color: "#93c5fd" }}
+                    style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#3b82f6" }}
                   >
                     {i + 1}
                   </span>
                   {section.title}
                 </h4>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
                   {renderContentWithCitations(section.content, activeCitation, onCitationClick)}
                 </p>
               </div>
@@ -172,10 +176,10 @@ function AssistantMessage({
 
         {/* Disclaimer */}
         <div
-          className="mt-3 flex items-start gap-2 px-4 py-2.5 rounded-lg text-xs text-slate-500"
-          style={{ backgroundColor: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)" }}
+          className="mt-3 flex items-start gap-2 px-4 py-2.5 rounded-lg text-xs"
+          style={{ backgroundColor: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", color: "var(--muted-foreground)" }}
         >
-          <AlertTriangle size={12} className="flex-shrink-0 text-amber-600 mt-0.5" />
+          <AlertTriangle size={12} className="flex-shrink-0 mt-0.5" style={{ color: "#d97706" }} />
           <span>{rag.disclaimer}</span>
         </div>
       </div>
@@ -193,19 +197,23 @@ function SessionItem({ session, active, onSelect, onDelete }: {
     <div
       className={cn(
         "group flex items-start gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-        active ? "text-blue-300" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+        active ? "" : "hover:bg-white/5"
       )}
-      style={active ? { backgroundColor: "rgba(59,130,246,0.1)" } : {}}
+      style={active
+        ? { backgroundColor: "rgba(201,162,39,0.1)", color: "var(--primary)" }
+        : { color: "var(--muted-foreground)" }
+      }
       onClick={onSelect}
     >
       <MessageSquare size={13} className="flex-shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium truncate">{session.title}</p>
-        <p className="text-xs text-slate-600">{session.messages.length} message{session.messages.length > 1 ? "s" : ""}</p>
+        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{session.messages.length} message{session.messages.length > 1 ? "s" : ""}</p>
       </div>
       <button
         onClick={e => { e.stopPropagation(); onDelete(); }}
-        className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-600 hover:text-red-400 transition-all"
+        className="opacity-0 group-hover:opacity-100 p-1 rounded transition-all hover:text-red-500"
+        style={{ color: "var(--muted-foreground)" }}
       >
         <Trash2 size={11} />
       </button>
@@ -361,11 +369,11 @@ export default function AssistantPage() {
           </div>
 
           <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-            <p className="text-xs text-slate-600 px-3 py-1.5 uppercase tracking-wide font-medium">
+            <p className="text-xs px-3 py-1.5 uppercase tracking-wide font-medium" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>
               Historique
             </p>
             {sessions.length === 0 ? (
-              <p className="text-xs text-slate-600 px-3 py-2">Aucune conversation</p>
+              <p className="text-xs px-3 py-2" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>Aucune conversation</p>
             ) : (
               sessions.map(session => (
                 <SessionItem
@@ -388,7 +396,7 @@ export default function AssistantPage() {
           </div>
 
           <div className="p-3 border-t" style={{ borderColor: "var(--border)" }}>
-            <p className="text-xs text-slate-600">Conforme RGPD</p>
+            <p className="text-xs" style={{ color: "var(--sidebar-foreground)", opacity: 0.4 }}>Conforme RGPD</p>
           </div>
         </aside>
       )}
@@ -403,36 +411,18 @@ export default function AssistantPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors"
+              className="p-1.5 rounded-lg transition-colors hover:bg-black/10"
+              style={{ color: "var(--foreground)" }}
             >
               <History size={16} />
             </button>
             <div>
-              <h2 className="text-sm font-semibold text-slate-200">Assistant RAG juridique</h2>
-              <p className="text-xs text-slate-500">Réponses sourcées sur la jurisprudence française</p>
+              <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Assistant RAG juridique</h2>
+              <p className="text-xs" style={{ color: "var(--foreground)", opacity: 0.6 }}>Réponses sourcées sur la jurisprudence française</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Mode toggle */}
-            <div className="flex items-center gap-1 p-1 rounded-lg" style={{ backgroundColor: "var(--muted)" }}>
-              {(["strict", "exploratoire"] as RAGMode[]).map(m => (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={cn(
-                    "px-3 py-1 rounded-md text-xs font-medium capitalize transition-all",
-                    mode === m ? "text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
-                  )}
-                  style={mode === m ? { backgroundColor: "var(--primary)" } : {}}
-                >
-                  {m}
-                </button>
-              ))}
-            </div>
-            <button className="p-1.5 rounded-lg text-slate-500 hover:text-slate-300 transition-colors">
-              <Settings size={15} />
-            </button>
           </div>
         </div>
 
@@ -449,10 +439,10 @@ export default function AssistantPage() {
                   className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
                   style={{ backgroundColor: "rgba(99,102,241,0.15)" }}
                 >
-                  <Zap size={24} style={{ color: "#818cf8" }} />
+                  <Zap size={24} style={{ color: "#6366f1" }} />
                 </div>
-                <h3 className="text-lg font-bold text-slate-100 mb-2">Assistant juridique IA</h3>
-                <div className="text-sm text-slate-400 text-left space-y-2 mt-4">
+                <h3 className="text-lg font-bold mb-2" style={{ color: "var(--foreground)" }}>Assistant juridique IA</h3>
+                <div className="text-sm text-left space-y-2 mt-4" style={{ color: "var(--foreground)" }}>
                   {WELCOME_MESSAGE.split("\n").filter(Boolean).map((line, i) => (
                     <p key={i}>{line.replace(/\*\*([^*]+)\*\*/g, "$1")}</p>
                   ))}
@@ -470,8 +460,8 @@ export default function AssistantPage() {
                   <button
                     key={i}
                     onClick={() => { setInputValue(q); textareaRef.current?.focus(); }}
-                    className="text-left px-4 py-3 rounded-xl text-sm text-slate-400 hover:text-slate-200 border transition-all hover:border-blue-700 group"
-                    style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+                    className="text-left px-4 py-3 rounded-xl text-sm border transition-all hover:border-blue-400"
+                    style={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }}
                   >
                     <span className="line-clamp-2">{q}</span>
                   </button>
@@ -496,14 +486,14 @@ export default function AssistantPage() {
               <div className="flex gap-3 mb-4">
                 <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
                   style={{ backgroundColor: "rgba(99,102,241,0.2)", border: "1px solid rgba(99,102,241,0.3)" }}>
-                  <Zap size={13} style={{ color: "#818cf8" }} />
+                  <Zap size={13} style={{ color: "#6366f1" }} />
                 </div>
                 <div
                   className="px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-3"
                   style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
                 >
                   <Loader2 size={15} className="animate-spin text-blue-500" />
-                  <span className="text-sm text-slate-400">Analyse de la jurisprudence en cours...</span>
+                  <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>Analyse de la jurisprudence en cours...</span>
                 </div>
               </div>
             )}
@@ -529,9 +519,9 @@ export default function AssistantPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Posez votre question juridique... (Entrée pour envoyer, Maj+Entrée pour sauter une ligne)"
                 rows={2}
-                className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none leading-relaxed"
+                className="flex-1 bg-transparent text-sm resize-none focus:outline-none leading-relaxed"
+                style={{ color: "var(--foreground)", maxHeight: "120px" }}
                 disabled={loading}
-                style={{ maxHeight: "120px" }}
               />
               <button
                 onClick={handleSend}
@@ -545,8 +535,8 @@ export default function AssistantPage() {
                 }
               </button>
             </div>
-            <p className="text-xs text-slate-600 mt-2 text-center">
-              Mode <strong className="text-slate-500">{mode}</strong> · Sources citées · Ne constitue pas un avis juridique
+            <p className="text-xs mt-2 text-center" style={{ color: "var(--muted-foreground)" }}>
+              Mode <strong>{mode}</strong> · Sources citées · Ne constitue pas un avis juridique
             </p>
           </div>
         </div>
