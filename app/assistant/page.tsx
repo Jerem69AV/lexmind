@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Send, Loader2, MessageSquare, Plus, History, BookOpen,
-  AlertTriangle, ChevronDown, Trash2, Zap, ExternalLink, Scale, Globe
+  AlertTriangle, ChevronDown, Trash2, Zap, ExternalLink, Scale
 } from "lucide-react";
 import { cn, generateId } from "@/lib/utils";
 import type { ChatMessage, ChatSession, RAGResponse, RAGMode, UsedDocument, WebSource } from "@/types";
@@ -286,7 +286,6 @@ export default function AssistantPage() {
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode] = useState<RAGMode>("strict");
-  const [webSearch, setWebSearch] = useState(false);
   const [showHistory, setShowHistory] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -337,7 +336,7 @@ export default function AssistantPage() {
       const res = await fetch("/api/rag/answer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, mode, web_search: webSearch }),
+        body: JSON.stringify({ question, mode, web_search: true }),
       });
 
       if (!res.ok) throw new Error("Erreur du serveur");
@@ -513,34 +512,17 @@ export default function AssistantPage() {
                 style={{ color: "var(--foreground)", maxHeight: "120px" }}
                 disabled={loading}
               />
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => setWebSearch(v => !v)}
-                  title={webSearch ? "Recherche web activée — cliquer pour désactiver" : "Activer la recherche web (sources officielles françaises)"}
-                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-all"
-                  style={webSearch
-                    ? { backgroundColor: "var(--primary)", color: "white" }
-                    : { backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }
-                  }
-                >
-                  <Globe size={13} />
-                  Web
-                </button>
-                <button
-                  onClick={handleSend}
-                  disabled={!inputValue.trim() || loading}
-                  className="flex items-center justify-center w-9 h-9 rounded-lg transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: "#a8841f" }}
-                >
-                  {loading ? <Loader2 size={16} className="animate-spin text-white" /> : <Send size={16} className="text-white" />}
-                </button>
-              </div>
+              <button
+                onClick={handleSend}
+                disabled={!inputValue.trim() || loading}
+                className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{ backgroundColor: "#a8841f" }}
+              >
+                {loading ? <Loader2 size={16} className="animate-spin text-white" /> : <Send size={16} className="text-white" />}
+              </button>
             </div>
             <p className="text-xs mt-2 text-center" style={{ color: "var(--primary)", fontWeight: 500 }}>
-              Judilibre · {webSearch
-                ? <span style={{ fontWeight: 700 }}>Recherche web activée</span>
-                : <span>Recherche web désactivée — cliquer sur <strong>Web</strong> pour l&apos;activer</span>
-              } · Ne constitue pas un avis juridique
+              Judilibre · Sources web officielles françaises · Ne constitue pas un avis juridique
             </p>
           </div>
         </div>
