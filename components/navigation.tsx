@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Scale, Search, MessageSquare, LayoutDashboard, LogIn, UserPlus, Menu, X, Moon, Sun, Code2, ArrowLeft } from "lucide-react";
+import { Scale, Search, MessageSquare, LayoutDashboard, Menu, X, Moon, Sun, Code2, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -95,23 +95,6 @@ export function Navigation() {
               {mounted ? (resolvedTheme === "dark" ? <Sun size={16} /> : <Moon size={16} />) : <Moon size={16} />}
             </button>
 
-            <div className="hidden sm:flex items-center gap-2">
-              <Link
-                href="/auth/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white transition-colors"
-              >
-                <LogIn size={14} />
-                Connexion
-              </Link>
-              <Link
-                href="/auth/register"
-                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold text-white rounded-lg transition-all hover:brightness-110"
-                style={{ backgroundColor: "var(--primary)" }}
-              >
-                <UserPlus size={14} />
-                S&apos;inscrire
-              </Link>
-            </div>
 
             {/* Mobile menu toggle */}
             <button
@@ -148,23 +131,6 @@ export function Navigation() {
               </Link>
             );
           })}
-          <div className="pt-2 flex flex-col gap-2 border-t" style={{ borderColor: "var(--border)" }}>
-            <Link
-              href="/auth/login"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5"
-            >
-              <LogIn size={15} /> Connexion
-            </Link>
-            <Link
-              href="/auth/register"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold text-white"
-              style={{ backgroundColor: "var(--primary)" }}
-            >
-              <UserPlus size={15} /> S&apos;inscrire
-            </Link>
-          </div>
         </div>
       )}
     </header>
