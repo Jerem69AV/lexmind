@@ -57,7 +57,7 @@ export default function RgpdPage() {
 
           <div className="mt-4 p-3 rounded-lg border-l-4 font-medium" style={{ borderColor: "var(--primary)", backgroundColor: "rgba(201,162,39,0.06)" }}>
             AVCA Legal <strong>ne collecte ni ne stocke directement</strong> aucune adresse IP ni aucun log de navigation. Aucun traçage ou profilage de l'utilisateur n'est effectué par AVCA Legal.
-            En revanche, l'hébergeur Vercel Inc., agissant en qualité de <strong>sous-traitant</strong>, collecte automatiquement les adresses IP dans ses logs serveur à des fins techniques et de sécurité, dans le cadre de son infrastructure. Ce traitement est encadré par un accord de traitement des données (DPA) conclu avec Vercel, conformément à l'article 28 du RGPD.
+            En revanche, l'hébergeur Vercel Inc. collecte automatiquement les adresses IP dans ses logs serveur à des fins techniques et de sécurité, dans le cadre de l'exploitation de son infrastructure. Ce traitement relève de la responsabilité propre de Vercel et est encadré par ses propres conditions générales et sa politique de confidentialité, accessibles sur <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--primary)" }}>vercel.com/legal/privacy-policy</a>.
           </div>
         </section>
 
@@ -95,7 +95,7 @@ export default function RgpdPage() {
               <strong style={{ color: "var(--foreground)" }}>AVCA Legal</strong> — responsable de traitement, administration du Service ;
             </li>
             <li>
-              <strong style={{ color: "var(--foreground)" }}>Vercel Inc.</strong> — sous-traitant hébergeur (article 28 RGPD), logs serveur incluant IP conservés max. 30 jours. Encadré par DPA Vercel et clauses contractuelles types (CCT) de la Commission européenne. Certifié SOC 2 Type II. <a href="https://vercel.com/legal/dpa" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--primary)" }}>Consulter le DPA Vercel</a> ;
+              <strong style={{ color: "var(--foreground)" }}>Vercel Inc.</strong> — hébergeur, collecte les logs serveur (dont IP) dans le cadre de son infrastructure. Certifié SOC 2 Type II. Transferts UE → États-Unis encadrés par les Clauses Contractuelles Types (CCT) de la Commission européenne et le Data Privacy Framework. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--primary)" }}>Politique de confidentialité Vercel</a> ;
             </li>
             <li>
               <strong style={{ color: "var(--foreground)" }}>Cour de cassation / DILA</strong> — fournisseurs de données publiques (Judilibre, Légifrance), aucune donnée utilisateur transmise au-delà des requêtes de recherche anonymes ;
