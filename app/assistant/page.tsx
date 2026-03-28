@@ -416,10 +416,9 @@ export default function AssistantPage() {
             >
               <History size={16} />
             </button>
-            <div>
-              <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Assistant RAG juridique</h2>
-              <p className="text-xs" style={{ color: "var(--foreground)", opacity: 0.6 }}>Réponses sourcées sur la jurisprudence française</p>
-            </div>
+            <h2 className="text-base font-bold" style={{ color: "var(--sidebar)" }}>
+              Assistant Juridique IA AVCA Legal
+            </h2>
           </div>
 
           <div className="flex items-center gap-3">

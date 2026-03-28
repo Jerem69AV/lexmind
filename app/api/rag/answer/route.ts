@@ -125,9 +125,10 @@ Génère 2 à 4 sections thématiques. La confidence doit refléter honnêtement
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("RAG error:", error);
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("RAG error:", msg);
     return NextResponse.json(
-      { error: "Erreur lors du traitement de la question. Vérifiez la configuration ANTHROPIC_API_KEY." },
+      { error: `Erreur: ${msg}` },
       { status: 500 }
     );
   }
