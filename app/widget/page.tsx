@@ -125,7 +125,10 @@ function WidgetContent() {
         <div className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "#c9a227" }}>
           <Scale size={13} style={{ color: "#07111f" }} />
         </div>
-        <span className="font-semibold text-white text-xs tracking-wide">AVCA Legal</span>
+        <div>
+          <span className="font-semibold text-white text-xs tracking-wide">Agent IA</span>
+          <span className="text-xs ml-1.5 opacity-50 text-white">· Jurisprudence</span>
+        </div>
         <button
           onClick={openFull}
           className="ml-auto flex items-center gap-1 text-xs px-2.5 py-1 rounded-md font-medium transition-all hover:brightness-110"
@@ -294,8 +297,9 @@ function WidgetContent() {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(201,162,39,0.12)", border: "1px solid rgba(201,162,39,0.25)" }}>
               <Scale size={22} style={{ color: "#c9a227" }} />
             </div>
-            <p className="text-xs font-medium mb-1" style={{ color: s.text }}>Jurisprudence française</p>
-            <p className="text-xs mb-4" style={{ color: s.muted }}>Cour de cassation · 117 000+ décisions</p>
+            <p className="text-xs font-semibold mb-1" style={{ color: s.text }}>Recherche jurisprudentielle IA</p>
+            <p className="text-xs mb-1" style={{ color: s.muted }}>117 000+ décisions · Cour de cassation</p>
+            <p className="text-xs mb-4" style={{ color: s.muted, opacity: 0.7 }}>Indexées et analysées par intelligence artificielle</p>
             <button
               onClick={openFull}
               className="flex items-center gap-1.5 mx-auto text-xs px-3 py-1.5 rounded-lg font-medium transition-all hover:brightness-110"
