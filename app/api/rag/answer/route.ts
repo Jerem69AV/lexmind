@@ -122,7 +122,7 @@ Génère 2 à 4 sections thématiques. La confidence reflète la qualité des so
 
     // ── 5. Appel Claude ────────────────────────────────────────────────────────
     const claudeResponse = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-opus-4-6",
       max_tokens: 2500,
       messages: [{ role: "user", content: userPrompt }],
       system: systemPrompt,
