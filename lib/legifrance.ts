@@ -131,18 +131,45 @@ function extractSnippet(text: string, query: string, maxLen = 250): string {
 }
 
 const JURIDICTION_MAP: Record<string, LegalDocument["juridiction"]> = {
+  // Cour de cassation
   "Cour de cassation": "Cour de cassation",
+  // Conseil d'État (avec et sans accent, variations API)
   "Conseil d'État": "Conseil d'État",
+  "Conseil d'Etat": "Conseil d'État",
+  "CE": "Conseil d'État",
+  // Conseil constitutionnel
   "Conseil constitutionnel": "Conseil constitutionnel",
+  "CC": "Conseil constitutionnel",
+  // Cours d'appel
   "Cour d'appel": "Cour d'appel",
+  "CA": "Cour d'appel",
+  // Tribunaux judiciaires
   "Tribunal judiciaire": "Tribunal judiciaire",
+  "TJ": "Tribunal judiciaire",
+  "Tribunal de grande instance": "Tribunal judiciaire",
+  "TGI": "Tribunal judiciaire",
+  // Cour administrative d'appel
   "Cour administrative d'appel": "Cour administrative d'appel",
+  "CAA": "Cour administrative d'appel",
+  // Prud'hommes
   "Conseil de prud'hommes": "Conseil de prud'hommes",
+  "CPH": "Conseil de prud'hommes",
 };
 
 function mapJuridiction(raw: string | undefined): LegalDocument["juridiction"] {
   if (!raw) return "Cour de cassation";
-  return JURIDICTION_MAP[raw] ?? "Cour de cassation";
+  // Correspondance exacte
+  if (JURIDICTION_MAP[raw]) return JURIDICTION_MAP[raw];
+  // Correspondance partielle (ex: "Cour administrative d'appel de Paris")
+  const lower = raw.toLowerCase();
+  if (lower.includes("cassation")) return "Cour de cassation";
+  if (lower.includes("conseil d'état") || lower.includes("conseil d'etat")) return "Conseil d'État";
+  if (lower.includes("constitutionnel")) return "Conseil constitutionnel";
+  if (lower.includes("administrative d'appel") || lower.includes("administrative d'appel")) return "Cour administrative d'appel";
+  if (lower.includes("cour d'appel") || lower.includes("cour d'appel")) return "Cour d'appel";
+  if (lower.includes("prud")) return "Conseil de prud'hommes";
+  if (lower.includes("judiciaire") || lower.includes("grande instance")) return "Tribunal judiciaire";
+  return raw as LegalDocument["juridiction"];
 }
 
 function mapSolution(raw: string | undefined): LegalDocument["solution"] {

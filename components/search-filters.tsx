@@ -12,8 +12,16 @@ interface SearchFiltersProps {
   resultCount?: number;
 }
 
-// Juridictions disponibles via Judilibre (sources actives)
-const JURIDICTIONS_DISPONIBLES = new Set(["Cour de cassation"]);
+// Toutes les juridictions sont disponibles (Judilibre + Légifrance actif)
+const JURIDICTIONS_DISPONIBLES = new Set([
+  "Cour de cassation",
+  "Conseil d'État",
+  "Cour d'appel",
+  "Tribunal judiciaire",
+  "Conseil constitutionnel",
+  "Cour administrative d'appel",
+  "Conseil de prud'hommes",
+]);
 
 const JURIDICTIONS = [
   "Cour de cassation",
