@@ -44,8 +44,8 @@ const features = [
   },
   {
     icon: Shield,
-    title: "Information juridique fiable",
-    description: "Les réponses sont purement informatives et ne constituent pas un conseil juridique. Pour toute question spécifique, le cabinet AVCA Legal reste à votre disposition.",
+    title: "Information à titre documentaire",
+    description: "Les résultats sont fournis à titre documentaire uniquement et ne constituent pas un conseil juridique. Pour toute question spécifique, le cabinet AVCA Legal reste à votre disposition.",
     color: "text-teal-600",
     bg: "rgba(20,184,166,0.08)",
     border: "rgba(20,184,166,0.2)",
