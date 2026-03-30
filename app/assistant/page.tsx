@@ -282,31 +282,10 @@ Cette réponse est informative. Pour toute question nécessitant l'intervention 
 // ── Page principale ────────────────────────────────────────────────────────────
 
 export default function AssistantPage() {
-  const [sessions, setSessions] = useState<ChatSession[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const saved = localStorage.getItem("avca-chat-sessions");
-      return saved ? JSON.parse(saved) : [];
-    } catch { return []; }
-  });
-
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    try { return localStorage.getItem("avca-active-session"); } catch { return null; }
-  });
-
-  const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const savedId = localStorage.getItem("avca-active-session");
-      if (!savedId) return [];
-      const savedSessions = localStorage.getItem("avca-chat-sessions");
-      if (!savedSessions) return [];
-      const parsed: ChatSession[] = JSON.parse(savedSessions);
-      const session = parsed.find(s => s.id === savedId);
-      return session ? session.messages : [];
-    } catch { return []; }
-  });
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -321,18 +300,6 @@ export default function AssistantPage() {
   }, []);
 
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
-
-  // Persist sessions to localStorage on every change
-  useEffect(() => {
-    try { localStorage.setItem("avca-chat-sessions", JSON.stringify(sessions)); } catch { /* quota */ }
-  }, [sessions]);
-
-  // Persist active session ID
-  useEffect(() => {
-    if (activeSessionId) {
-      try { localStorage.setItem("avca-active-session", activeSessionId); } catch { /* quota */ }
-    }
-  }, [activeSessionId]);
 
   const startNewSession = useCallback(() => {
     const id = generateId();
@@ -349,9 +316,42 @@ export default function AssistantPage() {
     setMessages([]);
   }, [mode]);
 
+  // Chargement depuis localStorage après montage côté client
   useEffect(() => {
-    if (!activeSessionId) startNewSession();
-  }, [activeSessionId, startNewSession]);
+    try {
+      const savedSessions = localStorage.getItem("avca-chat-sessions");
+      const savedId = localStorage.getItem("avca-active-session");
+      if (savedSessions && savedId) {
+        const parsed: ChatSession[] = JSON.parse(savedSessions);
+        const session = parsed.find(s => s.id === savedId);
+        if (session) {
+          setSessions(parsed);
+          setActiveSessionId(savedId);
+          setMessages(session.messages);
+          setHydrated(true);
+          return;
+        }
+      }
+    } catch { /* ignore */ }
+    setHydrated(true);
+  }, []);
+
+  // Crée une nouvelle session seulement si rien n'a été restauré
+  useEffect(() => {
+    if (hydrated && !activeSessionId) startNewSession();
+  }, [hydrated, activeSessionId, startNewSession]);
+
+  // Sauvegarde les sessions dans localStorage à chaque modification
+  useEffect(() => {
+    if (!hydrated) return;
+    try { localStorage.setItem("avca-chat-sessions", JSON.stringify(sessions)); } catch { /* quota */ }
+  }, [sessions, hydrated]);
+
+  // Sauvegarde l'ID de session active
+  useEffect(() => {
+    if (!hydrated || !activeSessionId) return;
+    try { localStorage.setItem("avca-active-session", activeSessionId); } catch { /* quota */ }
+  }, [activeSessionId, hydrated]);
 
   const handleSend = async () => {
     const question = inputValue.trim();
