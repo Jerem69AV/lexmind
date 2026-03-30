@@ -280,9 +280,32 @@ Cette réponse est informative. Pour toute question nécessitant l'intervention 
 // ── Page principale ────────────────────────────────────────────────────────────
 
 export default function AssistantPage() {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [sessions, setSessions] = useState<ChatSession[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const saved = localStorage.getItem("avca-chat-sessions");
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return localStorage.getItem("avca-active-session"); } catch { return null; }
+  });
+
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const savedId = localStorage.getItem("avca-active-session");
+      if (!savedId) return [];
+      const savedSessions = localStorage.getItem("avca-chat-sessions");
+      if (!savedSessions) return [];
+      const parsed: ChatSession[] = JSON.parse(savedSessions);
+      const session = parsed.find(s => s.id === savedId);
+      return session ? session.messages : [];
+    } catch { return []; }
+  });
+
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode] = useState<RAGMode>("strict");
@@ -296,6 +319,18 @@ export default function AssistantPage() {
   }, []);
 
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
+
+  // Persist sessions to localStorage on every change
+  useEffect(() => {
+    try { localStorage.setItem("avca-chat-sessions", JSON.stringify(sessions)); } catch { /* quota */ }
+  }, [sessions]);
+
+  // Persist active session ID
+  useEffect(() => {
+    if (activeSessionId) {
+      try { localStorage.setItem("avca-active-session", activeSessionId); } catch { /* quota */ }
+    }
+  }, [activeSessionId]);
 
   const startNewSession = useCallback(() => {
     const id = generateId();
