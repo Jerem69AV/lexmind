@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, Loader2, SortAsc } from "lucide-react";
 import { SearchFiltersPanel } from "@/components/search-filters";
@@ -14,7 +14,7 @@ const SORT_OPTIONS = [
   { value: "date_asc", label: "Date (ancien)" },
 ];
 
-export default function ResearchPage() {
+function ResearchPageContent() {
   const [query, setQuery] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [filters, setFilters] = useState<SearchFilters>({});
@@ -359,5 +359,13 @@ export default function ResearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResearchPage() {
+  return (
+    <Suspense>
+      <ResearchPageContent />
+    </Suspense>
   );
 }
