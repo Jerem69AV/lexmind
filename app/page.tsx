@@ -1,51 +1,51 @@
 import Link from "next/link";
-import { Scale, Search, MessageSquare, FileText, Shield, ArrowRight, BookOpen, Zap, Database, Lock } from "lucide-react";
+import { Scale, Search, MessageSquare, FileText, Shield, ArrowRight, Globe, Zap, Database } from "lucide-react";
 
 const features = [
   {
     icon: Search,
-    title: "Recherche multi-sources",
-    description: "Interrogez simultanément Judilibre (Cour de cassation, Conseil d'État) et Légifrance avec filtres avancés par juridiction, chambre, date et solution.",
+    title: "Recherche jurisprudentielle",
+    description: "Interrogez Judilibre (Cour de cassation, Conseil d'État) avec filtres avancés par juridiction, chambre, date et solution. Plus de 117 000 décisions indexées.",
     color: "text-blue-500",
     bg: "rgba(59,130,246,0.08)",
     border: "rgba(59,130,246,0.2)",
   },
   {
     icon: MessageSquare,
-    title: "Assistant RAG juridique",
-    description: "Posez vos questions en langage naturel. L'IA synthétise les décisions pertinentes et cite ses sources avec des références vérifiables.",
+    title: "Assistant IA juridique",
+    description: "Posez vos questions en langage naturel. L'IA croise la jurisprudence Judilibre et les sources web officielles pour rédiger une note juridique fiable et sourcée.",
     color: "text-indigo-500",
     bg: "rgba(99,102,241,0.08)",
     border: "rgba(99,102,241,0.2)",
   },
   {
     icon: FileText,
-    title: "Citations traçables",
-    description: "Chaque réponse de l'assistant est accompagnée des décisions sources avec ECLI, chambre, date et extraits pertinents pour vérification immédiate.",
+    title: "Citations vérifiables",
+    description: "Chaque affirmation est citée [J1]…[J5] pour la jurisprudence et [W1]…[W6] pour les sources web. Cliquez sur chaque référence pour accéder à la source originale.",
     color: "text-violet-500",
     bg: "rgba(139,92,246,0.08)",
     border: "rgba(139,92,246,0.2)",
   },
   {
-    icon: BookOpen,
-    title: "Exports professionnels",
-    description: "Exportez vos recherches et synthèses en PDF structuré, DOCX éditable ou CSV pour traitement de données. Idéal pour les mémoires et conclusions.",
+    icon: Globe,
+    title: "Sources web officielles",
+    description: "Chaque recherche croise automatiquement Légifrance, service-public.fr, Cour de cassation, Conseil d'État, CNIL et Europa.eu pour enrichir l'analyse.",
     color: "text-emerald-600",
     bg: "rgba(16,185,129,0.08)",
     border: "rgba(16,185,129,0.2)",
   },
   {
-    icon: Lock,
-    title: "Authentification & Organisations",
-    description: "Créez votre compte, invitez votre équipe, gérez les accès par rôle. Conformité RGPD garantie, aucune donnée client partagée.",
+    icon: Zap,
+    title: "Domaines d'intervention",
+    description: "Procédures collectives, droit pénal des affaires, crypto-actifs & blockchain, droit bancaire & financier, financements structurés, contentieux commercial.",
     color: "text-amber-600",
     bg: "rgba(245,158,11,0.08)",
     border: "rgba(245,158,11,0.2)",
   },
   {
     icon: Shield,
-    title: "Conformité RGPD",
-    description: "Hébergement en France, données chiffrées, logs d'audit, export et suppression des données sur demande. Adapté aux cabinets d'avocats et directions juridiques.",
+    title: "Information juridique fiable",
+    description: "Les réponses sont purement informatives et ne constituent pas un conseil juridique. Pour toute question spécifique, le cabinet AVCA Legal reste à votre disposition.",
     color: "text-teal-600",
     bg: "rgba(20,184,166,0.08)",
     border: "rgba(20,184,166,0.2)",
@@ -208,7 +208,7 @@ export default function HomePage() {
               return (
                 <div
                   key={i}
-                  className="rounded-xl p-6 border card-hover"
+                  className="rounded-xl p-6 border"
                   style={{ backgroundColor: "var(--card)", borderColor: feature.border }}
                 >
                   <div
@@ -247,8 +247,8 @@ export default function HomePage() {
               },
               {
                 step: "03",
-                title: "Vérifiez et exportez",
-                desc: "Consultez chaque décision source, vérifiez les citations, et exportez votre recherche en PDF, DOCX ou CSV.",
+                title: "Vérifiez les sources",
+                desc: "Cliquez sur chaque référence [J1] ou [W1] pour accéder directement à la décision ou au texte officiel. Contactez le cabinet si vous souhaitez un conseil personnalisé.",
               },
             ].map((step, i) => (
               <div key={i} className="text-center">
