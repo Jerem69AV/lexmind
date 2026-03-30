@@ -222,7 +222,9 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
               <span>Votre question nécessite l&apos;intervention d&apos;un avocat ou vous souhaitez confier votre dossier au cabinet AVCA Legal ?</span>
             </div>
             <a
-              href="mailto:contact@avca-avocats.fr?subject=Demande de consultation — AVCA Legal"
+              href="https://avca-avocats.fr/contact"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-semibold transition-all hover:brightness-110"
               style={{ backgroundColor: "var(--sidebar)" }}
             >
