@@ -19,22 +19,35 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "AVCA Legal — Agent de recherche juridique",
+    default: "AVCA Legal — Recherche jurisprudentielle IA",
     template: "%s | AVCA Legal",
   },
   description:
-    "Agent de recherche juridique IA du cabinet AVCA Legal. Accédez à 500 000+ décisions, utilisez l'assistant RAG avec citations traçables et exportez en PDF/DOCX/CSV.",
-  keywords: ["jurisprudence", "recherche juridique", "IA", "Judilibre", "Cour de cassation", "droit français", "AVCA Legal"],
-  authors: [{ name: "AVCA Legal" }],
-  creator: "AVCA Legal",
+    "Agent de recherche juridique IA du cabinet Asta-Vola Cannard & Associés. Recherchez dans 117 000+ décisions officielles (Judilibre), analysez la jurisprudence en droit des affaires, procédures collectives, crypto-actifs, droit bancaire et pénal des affaires.",
+  keywords: [
+    "jurisprudence", "recherche juridique", "intelligence artificielle", "Judilibre",
+    "Cour de cassation", "droit français", "AVCA Legal", "avocat", "Thonon-les-Bains",
+    "procédures collectives", "restructuring", "droit des affaires", "crypto-actifs",
+    "droit bancaire", "droit pénal des affaires", "Asta-Vola", "cabinet avocat",
+  ],
+  authors: [{ name: "Cabinet Asta-Vola Cannard & Associés" }],
+  creator: "Cabinet Asta-Vola Cannard & Associés",
+  metadataBase: new URL("https://lexmind-tawny.vercel.app"),
+  alternates: { canonical: "https://lexmind-tawny.vercel.app" },
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    title: "AVCA Legal — Agent de recherche juridique",
-    description: "Agent de recherche juridique IA — Cabinet AVCA Legal",
+    url: "https://lexmind-tawny.vercel.app",
+    title: "AVCA Legal — Recherche jurisprudentielle IA",
+    description: "Recherchez et analysez la jurisprudence française grâce à l'IA. Cabinet Asta-Vola Cannard & Associés.",
     siteName: "AVCA Legal",
   },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: "summary",
+    title: "AVCA Legal — Recherche jurisprudentielle IA",
+    description: "Agent de recherche juridique IA — Cabinet Asta-Vola Cannard & Associés",
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 
 export default function RootLayout({
