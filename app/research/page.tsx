@@ -197,7 +197,12 @@ function ResearchPageContent() {
           </label>
 
           {hasSearched && queryTime !== null && (
-            <span className="text-xs text-slate-600">{total} résultats en {queryTime}ms</span>
+            <span className="text-xs text-slate-600">
+              {total} résultats en {queryTime}ms
+              {sourcesUsed.length > 0 && (
+                <span className="ml-2 text-slate-700">· sources : {sourcesUsed.join(", ")}</span>
+              )}
+            </span>
           )}
         </div>
 
@@ -293,17 +298,9 @@ function ResearchPageContent() {
                 <Search size={24} className="text-slate-500" />
               </div>
               <h3 className="text-base font-semibold mb-2" style={{ color: "var(--foreground)" }}>Aucune décision trouvée</h3>
-              {filters.juridiction && filters.juridiction !== "Cour de cassation" ? (
-                <p className="text-sm text-amber-400 max-w-sm mx-auto">
-                  La source <strong>Judilibre</strong> ne couvre que la <strong>Cour de cassation</strong>.
-                  Les juridictions <em>{filters.juridiction}</em>, Conseil d&apos;État, Cours d&apos;appel, etc.
-                  seront disponibles via Légifrance (accès en cours d&apos;ouverture).
-                </p>
-              ) : (
-                <p className="text-sm text-slate-500 max-w-sm mx-auto">
-                  Essayez d&apos;élargir votre recherche ou de modifier les filtres appliqués.
-                </p>
-              )}
+              <p className="text-sm text-slate-500 max-w-sm mx-auto">
+                Essayez d&apos;élargir votre recherche ou de modifier les filtres appliqués.
+              </p>
               <button
                 onClick={handleReset}
                 className="mt-4 text-sm text-blue-400 hover:text-blue-300"
