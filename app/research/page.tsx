@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, Loader2, SortAsc } from "lucide-react";
 import { SearchFiltersPanel } from "@/components/search-filters";
 import { DecisionCard } from "@/components/decision-card";
@@ -30,6 +31,8 @@ export default function ResearchPage() {
   const [sourcesUsed, setSourcesUsed] = useState<string[]>([]);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
   const [hasSearched, setHasSearched] = useState(false);
+  const searchParams = useSearchParams();
+  const didInit = useRef(false);
 
   const doSearch = useCallback(async (q: string, f: SearchFilters, p: number) => {
     setLoading(true);
@@ -63,10 +66,17 @@ export default function ResearchPage() {
     }
   }, [phraseExacte]);
 
-  // Search on mount with empty query
+  // Au chargement : lancer la recherche seulement si un ?query= est dans l'URL
   useEffect(() => {
-    doSearch("", {}, 1);
-  }, [doSearch]);
+    if (didInit.current) return;
+    didInit.current = true;
+    const urlQuery = searchParams.get("query") ?? "";
+    if (urlQuery.trim()) {
+      setInputValue(urlQuery);
+      setQuery(urlQuery);
+      doSearch(urlQuery, {}, 1);
+    }
+  }, [searchParams, doSearch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
